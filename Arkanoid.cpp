@@ -7,39 +7,27 @@
 #include <string>
 
 /* Test Framework realization */
-class MyFramework : public Framework {
-
+class Arkanoid : public Framework {
+	
 	int WIDTH{};
 	int HEIGHT{};
 	bool FULLSCREEN{};
 
 public:
-	MyFramework(int width, int height, bool fullscreen) : WIDTH{ width }, HEIGHT{ height }, FULLSCREEN{fullscreen}, Framework()
+	Arkanoid(int width, int height, bool fullscreen) : WIDTH{ width }, HEIGHT{ height }, FULLSCREEN{fullscreen}, Framework()
 	{
 
 	}
 
 	virtual void PreInit(int& width, int& height, bool& fullscreen)
 	{
-		//std::cout << argc << std::endl;
-		//for (int i = 0; i < argc; i++)
-		//{
-		//	std::cout << i << "\t" << argv[i] << std::endl;
-		//}
-		//std::cout << std::endl;
-		//std::string dimensions = argv[3];
-		//size_t separatorPos = dimensions.find_first_of('x');
-		//std::string sWidth{ dimensions.substr(0,separatorPos) };
-		//std::string sHeight{ dimensions.substr(separatorPos + 1) };
-		//int Width = std::stoi(sWidth);
-		////int Height = std::stoi(sHeight);
-		//if (!fullscreen)				/////////////////////  dlaczego nie lapie breakpoint?
-		//{
+		if (!FULLSCREEN)				
+		{
 			width = WIDTH;
 			height = HEIGHT;
-		//}
-
-		fullscreen = false;
+		}
+		else
+			fullscreen = FULLSCREEN;
 	}
 
 	virtual bool Init() {
@@ -75,31 +63,24 @@ public:
 		return "Arcanoid";
 	}
 };
+struct Dimensions
+{
+	int Width;
+	int Height;
+	bool fullscreen{ true };
+};
 
+Dimensions get_sizes(int argc, char* argv[]);
 
 
 int main(int argc, char* argv[])
 {
 	//////////////// wymiary okna poczatek
-	std::cout << argc << std::endl;
-	for (int i = 0; i < argc; i++)
-	{
-		std::cout <<i<<"\t"<< argv[i] << std::endl;
-	}
-	std::cout << std::endl;
-	std::string dimensions = argv[3];
-	size_t separatorPos = dimensions.find_first_of('x');
-	std::string sWidth{ dimensions.substr(0,separatorPos)};
-	std::string sHeight{ dimensions.substr(separatorPos + 1) };
-	int Width = std::stoi(sWidth);
-	int Height = std::stoi(sHeight);
-
-
+	Dimensions dimensions{ get_sizes(argc,argv) };
 	//////////////////// wymiary okna koniec
-	int width{ 320 };
-	int height{ 600 };
+
 	bool fullscreen{};
-	auto f = new MyFramework(Width, Height,fullscreen);
+	auto f = new Arkanoid(dimensions.Width, dimensions.Height,dimensions.fullscreen);
 	//f->PreInit(width, height, fullscreen);
 	
 	//f->Init();
@@ -109,4 +90,20 @@ int main(int argc, char* argv[])
 	delete f;
 	//return run();
 	return 0;
+}
+
+
+Dimensions get_sizes(int argc, char* argv[])
+{
+	std::string dimensions = argv[3];
+	size_t separatorPos = dimensions.find_first_of('x');
+	
+	if (separatorPos == std::string::npos)
+		return Dimensions{ 0,0,true };
+
+	std::string sWidth{ dimensions.substr(0,separatorPos) };
+	std::string sHeight{ dimensions.substr(separatorPos + 1) };
+	int Width = std::stoi(sWidth);
+	int Height = std::stoi(sHeight);
+	return Dimensions{ Width, Height,false };
 }

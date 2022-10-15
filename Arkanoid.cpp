@@ -5,71 +5,26 @@
 #include "Framework.h"
 #include <iostream>
 #include <string>
-
-
-class Arkanoid;
-
-class Resizer
-{
-	int m_SreenWidth;
-	int m_ScreenHeight;
-
-	Resizer()
-	{
-		getScreenSize(m_SreenWidth, m_ScreenHeight);
-	}
-	friend class Arkanoid;
-
-public:
-	void Resize(int & a_spriteWidth, int & a_spriteHeight)
-	{
-		double scale{};
-	}
-};
-
-class Visible
-{
-	Sprite* m_Sprite;
-	const char* m_SpritePath;
-protected:
-	int m_Width, m_Height;
-	int m_x, m_y;
-
-	Visible(const char* a_SpritePath, int a_width, int a_height, int x, int y): m_SpritePath{a_SpritePath}, m_Width{a_width}, m_Height{a_height}, m_x{x}, m_y{y}
-	{
-		m_Sprite = createSprite(m_SpritePath);
-		if (!m_Sprite)
-		{
-			std::cout << "Sth went wrong while creating the sprite with a  given path: " << a_SpritePath << std::endl;
-			return;
-		}
-		//setSpriteSize(m_Sprite, m_Width, m_Height);	too early
-	}
-	virtual ~Visible()
-	{
-		//delete m_Sprite;	// wyjatek!!!!!!!!!
-	}
-
-	friend class Arkanoid;
-};
+#include "Visible/Visible.h"
+#include "Resizer.h"
+#include "Visible/Header.h"
+#include "Visible/Background.h"
 
 class Arkanoid : public Framework {
 	
 	int WIDTH{};
 	int HEIGHT{};
 	bool FULLSCREEN{};
-	Resizer* m_Resizer{};
+	//Resizer* m_Resizer{};
 	Visible* m_Background{};
+	Visible* m_Header{};
 
 public:
 	Arkanoid(int width, int height, bool fullscreen) : WIDTH{ width }, HEIGHT{ height }, FULLSCREEN{fullscreen}, Framework()
-	{
-		m_Resizer = new Resizer();
-		
-	}
+	{}
 	virtual ~Arkanoid()
 	{
-		delete m_Resizer;
+		//delete m_Resizer;
 		delete m_Background;
 	}
 
@@ -85,10 +40,21 @@ public:
 	}
 
 	virtual bool Init() {
-		int width, height;
-		getScreenSize(width, height);
-		m_Background = new Visible("data/background.png", width, height, 0, 0);
-		//////////////////////////////Resizer?
+		Resizer::ResizerInit();
+
+		try
+		{
+			m_Background = new BackGround("data/background.png", 600, 800, 0, 0);	////////////////////////// ZRÓB resizeowanie!!!!!!!!!!!!!!!!
+			//setSpriteSize(m_Background->m_Sprite, m_Background->m_Width, m_Background->m_Height);
+
+			m_Header = new Header("data/Header_600x64.png", 600, 64, 0, 0);
+		}
+		
+		catch (const InitializationException& e)
+		{
+			std::cout << e.what << std::endl;
+			return false;
+		}
 		return true;
 	}
 
@@ -97,17 +63,18 @@ public:
 	}
 
 	virtual bool Tick() {
-		static bool set{false};
-		if (!set)
-		{
-			int width, height;
-			getScreenSize(width, height);
-			setSpriteSize(m_Background->m_Sprite, width, height);
-			set = !set;
-		}
+		//static bool set{false};
+		//if (!set)
+		//{
+		//	int width, height;
+		//	getScreenSize(width, height);
+		//	setSpriteSize(m_Background->m_Sprite, width, height);
+		//	set = !set;
+		//}
 
 		drawTestBackground();
 		drawSprite(m_Background->m_Sprite, m_Background->m_x, m_Background->m_y);
+		drawSprite(m_Header->m_Sprite, m_Header->m_x, m_Header->m_y);
 
 		return false;
 	}

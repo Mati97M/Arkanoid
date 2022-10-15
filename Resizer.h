@@ -19,6 +19,7 @@ class Resizer
 public:
 	static void UpdateWidth(Visible* visible);
 	static void UpdateHeight(Visible* visible);
+	static void UpdateCoordinates(Visible* visible);
 
 	friend class Arkanoid;
 };
@@ -37,4 +38,10 @@ void Resizer::UpdateHeight(Visible* visible)
 	double HeigthRatio = visible->m_ScreenHeigthratio;
 	int newHeight = static_cast<double>(m_ScreenHeight) * HeigthRatio;
 	visible->m_Height = newHeight;
+}
+
+void Resizer::UpdateCoordinates(Visible* visible)
+{
+	visible->m_x *= visible->m_relativeX;
+	visible->m_y *= visible->m_relativeY;
 }

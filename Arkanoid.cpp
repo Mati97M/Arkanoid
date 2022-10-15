@@ -44,10 +44,10 @@ public:
 
 		try
 		{
-			m_Background = new BackGround("data/background.png", 600, 800, 0, 0);	////////////////////////// ZRÓB resizeowanie!!!!!!!!!!!!!!!!
+			m_Background = new BackGround("data/background.png", 600, 800, 0, 0, 0, 0);	////////////////////////// ZRÓB resizeowanie!!!!!!!!!!!!!!!!
 			//setSpriteSize(m_Background->m_Sprite, m_Background->m_Width, m_Background->m_Height);
 
-			m_Header = new Header("data/Header_600x64.png", 600, 64, 0, 0);
+			m_Header = new Header("data/Header_600x64.png", 600, 64, 0, 0, 0, 0);
 		}
 		
 		catch (const InitializationException& e)
@@ -97,6 +97,15 @@ public:
 	{
 		return "Arcanoid";
 	}
+
+	void drawVisibles()
+	{
+		for (const auto& element : Visible::s_Visibles)
+		{
+			drawSprite(element->m_Sprite, element->m_x, element->m_y);
+		}
+	}
+
 };
 struct SreenDimensions
 {

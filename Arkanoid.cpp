@@ -43,8 +43,13 @@ protected:
 			std::cout << "Sth went wrong while creating the sprite with a  given path: " << a_SpritePath << std::endl;
 			return;
 		}
-		setSpriteSize(m_Sprite, m_Width, m_Height);
+		//setSpriteSize(m_Sprite, m_Width, m_Height);	too early
 	}
+	virtual ~Visible()
+	{
+		//delete m_Sprite;	// wyjatek!!!!!!!!!
+	}
+
 	friend class Arkanoid;
 };
 
@@ -60,8 +65,7 @@ public:
 	Arkanoid(int width, int height, bool fullscreen) : WIDTH{ width }, HEIGHT{ height }, FULLSCREEN{fullscreen}, Framework()
 	{
 		m_Resizer = new Resizer();
-		m_Background = new Visible("background.png", WIDTH, HEIGHT, 0, 0);
-
+		
 	}
 	virtual ~Arkanoid()
 	{
@@ -73,16 +77,18 @@ public:
 	{
 		if (!FULLSCREEN)				
 		{
-			fullscreen = false;
 			width = WIDTH;
 			height = HEIGHT;
 		}
-		else
-			fullscreen = FULLSCREEN;
+
+		fullscreen = FULLSCREEN;
 	}
 
 	virtual bool Init() {
-
+		int width, height;
+		getScreenSize(width, height);
+		m_Background = new Visible("data/background.png", width, height, 0, 0);
+		//////////////////////////////Resizer?
 		return true;
 	}
 
@@ -91,8 +97,18 @@ public:
 	}
 
 	virtual bool Tick() {
+		static bool set{false};
+		if (!set)
+		{
+			int width, height;
+			getScreenSize(width, height);
+			setSpriteSize(m_Background->m_Sprite, width, height);
+			set = !set;
+		}
+
+		drawTestBackground();
 		drawSprite(m_Background->m_Sprite, m_Background->m_x, m_Background->m_y);
-		//drawTestBackground();
+
 		return false;
 	}
 

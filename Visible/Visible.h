@@ -29,7 +29,6 @@ protected:
 	const double m_relativeY;
 	double m_ScreenWidthratio = 1.;
 	double m_ScreenHeigthratio = 1.;
-	//static int s_BackgroundWidth, s_BackgroundHeight;		raczej z tego nie korzystam
 
 	Visible(const char* a_SpritePath, int a_width, int a_height, int x, int y, double a_relativeX, double a_relativeY) : m_SpritePath{ a_SpritePath }, m_Width{ a_width }, m_Height{ a_height }, m_x{ x }, m_y{ y }, m_relativeX{a_relativeX}, m_relativeY{a_relativeY}
 	{
@@ -52,5 +51,3 @@ protected:
 	friend class Resizer;
 };
 VisiblesList Visible::s_Visibles{};
-//int Visible::s_BackgroundWidth{};
-//int Visible::s_BackgroundHeight{};

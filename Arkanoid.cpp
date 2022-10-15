@@ -44,10 +44,7 @@ public:
 
 		try
 		{
-			m_Background = new BackGround("data/background.png", 600, 800, 0, 0, 0, 0);	////////////////////////// ZRÓB resizeowanie!!!!!!!!!!!!!!!!
-			//setSpriteSize(m_Background->m_Sprite, m_Background->m_Width, m_Background->m_Height);
-
-			m_Header = new Header("data/Header_600x64.png", 600, 64, 0, 0, 0, 0);
+			prepareEnv();
 		}
 		
 		catch (const InitializationException& e)
@@ -73,8 +70,7 @@ public:
 		//}
 
 		drawTestBackground();
-		drawSprite(m_Background->m_Sprite, m_Background->m_x, m_Background->m_y);
-		drawSprite(m_Header->m_Sprite, m_Header->m_x, m_Header->m_y);
+		drawVisibles();
 
 		return false;
 	}
@@ -106,6 +102,11 @@ public:
 		}
 	}
 
+	void prepareEnv()
+	{
+		m_Background = new BackGround("data/background.png", 600, 800, 0, 0, 0, 0);
+		m_Header = new Header("data/Header_600x64.png", 600, 64, 0, 0, 0, 0);
+	}
 };
 struct SreenDimensions
 {

@@ -5,6 +5,7 @@
 
 class Header : public Visible
 {
+
 	Header(const char* a_SpritePath, int a_width, int a_height, int x, int y, double a_relativeX, double a_relativeY) : Visible(a_SpritePath, a_width, a_height, x, y, a_relativeX, a_relativeY)
 	{
 		m_ScreenHeigthratio = 64/800.;

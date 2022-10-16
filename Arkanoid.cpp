@@ -28,69 +28,23 @@ void Arkanoid::PreInit(int& width, int& height, bool& fullscreen)
 
 	fullscreen = FULLSCREEN;
 }
-
-bool Arkanoid::Init() 
+bool Arkanoid::Init()
 {
 	Resizer::ResizerInit();
+	WIDTH = Resizer::getScreenWidth();
+	HEIGHT = Resizer::getScreenHeight();
 
 	try
 	{
 		prepareEnv();
 	}
-		
+
 	catch (const InitializationException& e)
 	{
 		std::cout << e.what << std::endl;
 		return false;
 	}
 	return true;
-}
-
-void Arkanoid::Close() {
-
-	}
-
-bool Arkanoid::Tick() {
-
-		drawTestBackground();
-		drawVisibles();
-
-		return false;
-	}
-
-void Arkanoid::onMouseMove(int x, int y, int xrelative, int yrelative) {
-
-	}
-
-void Arkanoid::onMouseButtonClick(FRMouseButton button, bool isReleased) {
-
-	}
-
-void Arkanoid::onKeyPressed(FRKey k) {
-	}
-
-void Arkanoid::onKeyReleased(FRKey k) {
-	}
-
-const char* Arkanoid::GetTitle()
-	{
-		return "Arcanoid";
-	}
-
-void Arkanoid::drawVisibles()
-{
-	//for (const auto& element : Visible::s_Visibles)
-	//{
-	//	drawSprite(element->getSprite(), element->m_x, element->m_y);
-	//}
-	drawSprite(spBackground, m_Background->m_x, m_Background->m_y);
-	drawSprite(spHeader, m_Header->m_x, m_Header->m_y);
-
-	for (const auto& life : Life::s_lifeList)
-	{
-		drawSprite(spLife, life->m_x, life->m_y);
-	}
-		
 }
 
 void Arkanoid::prepareEnv()
@@ -101,7 +55,7 @@ void Arkanoid::prepareEnv()
 	Life::s_LifeCounter = 1;
 	for (int i = 0; i < Life::s_LifeCounter; i++)
 	{
-		auto life = new Life(128, 116, 0, 0, 0, 0);
+		auto life = new Life(55, 55, 5, 5, 5. / WIDTH, 5. / HEIGHT);
 		Life::s_lifeList.push_back(life);
 
 	}
@@ -142,5 +96,49 @@ Sprite* Arkanoid::InitSprite(Sprite* a_sprite, const char* a_SpritePath)	///////
 }
 
 
+void Arkanoid::Close() {
 
+	}
 
+bool Arkanoid::Tick() {
+
+		//drawTestBackground();
+		drawVisibles();
+
+		return false;
+	}
+
+void Arkanoid::onMouseMove(int x, int y, int xrelative, int yrelative) {
+
+	}
+
+void Arkanoid::onMouseButtonClick(FRMouseButton button, bool isReleased) {
+
+	}
+
+void Arkanoid::onKeyPressed(FRKey k) {
+	}
+
+void Arkanoid::onKeyReleased(FRKey k) {
+	}
+
+const char* Arkanoid::GetTitle()
+	{
+		return "Arcanoid";
+	}
+
+void Arkanoid::drawVisibles()
+{
+	//for (const auto& element : Visible::s_Visibles)
+	//{
+	//	drawSprite(element->getSprite(), element->m_x, element->m_y);
+	//}
+	drawSprite(spBackground, m_Background->m_x, m_Background->m_y);
+	drawSprite(spHeader, m_Header->m_x, m_Header->m_y);
+
+	for (const auto& life : Life::s_lifeList)
+	{
+		drawSprite(spLife, life->m_x, life->m_y);
+	}
+		
+}

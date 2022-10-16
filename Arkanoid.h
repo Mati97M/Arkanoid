@@ -38,6 +38,8 @@ public:
 
 	virtual const char* GetTitle() override;
 
+private:
+
 	void drawVisibles();
 
 	void prepareEnv();
@@ -45,5 +47,7 @@ public:
 	void InitSprites();
 
 	Sprite* InitSprite(Sprite* a_sprite, const char* a_SpritePath);
+
+	
 };
 

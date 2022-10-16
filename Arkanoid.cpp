@@ -52,10 +52,11 @@ void Arkanoid::prepareEnv()
 	m_Background = new BackGround(WIDTH, HEIGHT, 0, 0, 0, 0);
 	m_Header = new Header(WIDTH, 64, 0, 0, 0, 0);
 
-	Life::s_LifeCounter = 1;
+	Life::s_LifeCounter = 7;
 	for (int i = 0; i < Life::s_LifeCounter; i++)
 	{
-		auto life = new Life(55, 55, 5, 5, 5. / WIDTH, 5. / HEIGHT);
+		int x = 10 * i + 55 * i;
+		auto life = new Life(55, 55, x, 5 , static_cast<double>(x)/ WIDTH, 5. / HEIGHT);
 		Life::s_lifeList.push_back(life);
 
 	}
@@ -79,12 +80,9 @@ void Arkanoid::InitSprites()
 
 }
 
-Sprite* Arkanoid::InitSprite(Sprite* a_sprite, const char* a_SpritePath)	//////////////////!!!!!!!!!!!!!!!!  trzeba cos innego wymyslic!!!!!!!!!!!!!!!
+Sprite* Arkanoid::InitSprite(Sprite* a_sprite, const char* a_SpritePath)
 {
-	//if (!a_sprite)
-	//{
 	a_sprite = createSprite(a_SpritePath);
-	//}
 
 	if (!a_sprite)
 	{

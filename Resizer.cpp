@@ -20,8 +20,8 @@ void Resizer::UpdateHeight(Visible* visible)
 
 void Resizer::UpdateCoordinates(Visible* visible)
 {
-	visible->m_x *= (1. - visible->m_relativeX);
-	visible->m_y *= (1. - visible->m_relativeY);
+	visible->m_x *= (1. - visible->m_ScreenWidthratio);
+	visible->m_y *= (1. - visible->m_ScreenHeigthratio);
 }
 
 void Resizer::ResizerInit()

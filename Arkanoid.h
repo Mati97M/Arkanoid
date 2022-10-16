@@ -2,6 +2,8 @@
 #include "Visible/Header.h"
 #include "Visible/Background.h"
 #include "Visible/Life.h"
+#include "Visible/Block/Block.h"
+
 class Arkanoid : public Framework {
 
 	int WIDTH{};
@@ -11,10 +13,10 @@ class Arkanoid : public Framework {
 	Visible* m_Background{};
 	Visible* m_Header{};
 
-	Sprite* spBackground{};
-	Sprite* spHeader{};
-	Sprite* spLife{};
-
+	Sprite* m_spBackground{};
+	Sprite* m_spHeader{};
+	Sprite* m_spLife{};
+	SpritesBlocks* m_TypesOfSpriteBlocks{};
 
 public:
 	Arkanoid(int width, int height, bool fullscreen);
@@ -37,6 +39,9 @@ public:
 	virtual void onKeyReleased(FRKey k);
 
 	virtual const char* GetTitle() override;
+
+	int getHeadersBottomLX() { return m_Header->m_x; }
+	int getHeadersBottomLY() { return m_Header->m_y + m_Header->m_Height; }
 
 private:
 

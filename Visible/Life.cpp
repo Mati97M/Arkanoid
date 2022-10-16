@@ -1,8 +1,5 @@
 #include "Life.h"
 
-const char* Life::s_SpritePath{};// { "data/60-Breakout-Tiles.png.png" };
-Sprite* Life::s_Sprite{};// = Visible::InitSprite(Life::s_Sprite, Life::s_SpritePath);
-
 LifesList Life::s_lifeList{};
 int Life::s_LifeCounter{};
 

@@ -6,9 +6,6 @@ using LifesList = std::list<Life*>;
 
 class Life : public Visible
 {
-	static const char* s_SpritePath;
-	static Sprite* s_Sprite;
-
 	static int s_LifeCounter;
 	static LifesList s_lifeList;
 

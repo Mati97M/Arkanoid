@@ -8,8 +8,9 @@ class Life : public Visible
 {
 	static int s_LifeCounter;
 	static LifesList s_lifeList;
+	static int s_Width, s_Height;
 
-	Life(int a_width, int a_height, int x, int y, double a_relativeX, double a_relativeY);
+	Life(int widthDivider, int heightDivider, float a_relativeX, float a_relativeY);
 	virtual ~Life()
 	{
 		//destroySprite(s_Sprite);
@@ -20,6 +21,5 @@ class Life : public Visible
 	//}
 
 	friend Arkanoid;
-	friend Resizer;
-	friend void loadTextures(Sprite* a_sprite, const char* a_SpritePath);
+	//friend Resizer;
 };

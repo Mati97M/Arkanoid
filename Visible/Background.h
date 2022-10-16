@@ -3,7 +3,9 @@
 
 class BackGround : public Visible
 {
-	BackGround(int a_width, int a_height, int x, int y, double a_relativeX, double a_relativeY);
+	static int s_Width, s_Height;
+
+	BackGround(int widthDivider, int heightDivider, float a_relativeX, float a_relativeY);
 
 	virtual ~BackGround()
 	{
@@ -15,5 +17,5 @@ class BackGround : public Visible
 	//	return s_Sprite;
 	//}
 	friend Arkanoid;
-	friend Resizer;
+	//friend Resizer;
 };

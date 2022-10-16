@@ -2,15 +2,37 @@
 
 
 BlocksList Block::s_BlocksList{};
-//int Block::m_Width{};		// lepiej byloby, gdyby szerokosc i wysokosc i te wspolczynniki zw nimi byly statyczne  - dotyczy to tez pozostalych klas
-//int Block::m_Width{};
+int Block::s_Width{};
+int Block::s_Height{};
 
-void Block::createBlocks(const int screenWidth, const int screenHeight, int startX, int startY)
+Block::Block(int widthDivider, int heightDivider, float a_relativeX, float a_relativeY) : Visible(a_relativeX, a_relativeY), m_Color{}, m_visible{ true }
 {
-	constexpr int rows{ 22 };
+	int scrWidth, scrHeight;
+	getScreenSize(scrWidth, scrHeight);
+
+	if (!Block::s_Width)
+	{
+		Block::s_Width = scrWidth / widthDivider;
+	}
+
+	if (!Block::s_Height)
+	{
+		Block::s_Height = scrHeight / heightDivider;
+	}
+	if (Block::s_Height && s_Width)
+	{
+
+	}
+}
+
+void Block::createBlocks(const int &screenWidth, const int &screenHeight, int startX, int startY)
+{
+	constexpr int rows{ 24 };
 	constexpr int cols{ 6 };
 	char blocks[][cols] =
 	{
+			{'X', 'X', 'X', 'X', 'X', 'X'},
+			{'X', 'X', 'X', 'X', 'X', 'X'},
 			{'B', 'G', 'R', 'O', 'O', 'Y'},
 			{'Y', 'G', 'B', 'B', 'B', 'O'},
 			{'O', 'R', 'Y', 'R', 'G', 'B'},
@@ -37,6 +59,7 @@ void Block::createBlocks(const int screenWidth, const int screenHeight, int star
 
 	int width = screenWidth / cols;
 	int height = (screenHeight - startY) / rows;
+	//int height = screenHeight / rows;
 
 	for (int row = 0; row < rows; row++)
 	{
@@ -44,9 +67,10 @@ void Block::createBlocks(const int screenWidth, const int screenHeight, int star
 		{
 			if (char color = blocks[row][col]; color != 'X')
 			{
-				int x =  col * width;
-				int y = startY + row * height;
-				auto block = new Block(width, height, x, y, static_cast<double>(x) / screenWidth, static_cast<double>(y) / screenHeight);// static_cast<double>(x)/ screenWidth, static_cast<double>(y)/ screenHeight);
+				int currX =  col * width;
+				//int y = startY + row * height;
+				int currY = row * height;
+				auto block = new Block(cols,rows, (800.f/6.f)/800.f * col, 32.f / 800.f * row);// (cols, rows, static_cast<float>(x) / screenWidth, static_cast<float>(y) / screenHeight);  //(width, height, x, y, static_cast<double>(x) / screenWidth, static_cast<double>(y) / screenHeight);// static_cast<double>(x)/ screenWidth, static_cast<double>(y)/ screenHeight);
 				block->m_Color = blocks[row][col];
 
 				s_BlocksList.push_back(block);

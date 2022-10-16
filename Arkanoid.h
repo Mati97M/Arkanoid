@@ -10,8 +10,8 @@ class Arkanoid : public Framework {
 	int HEIGHT{};
 	bool FULLSCREEN{};
 	//Resizer* m_Resizer{};
-	Visible* m_Background{};
-	Visible* m_Header{};
+	BackGround* m_Background{};
+	Header* m_Header{};
 
 	Sprite* m_spBackground{};
 	Sprite* m_spHeader{};
@@ -41,7 +41,7 @@ public:
 	virtual const char* GetTitle() override;
 
 	int getHeadersBottomLX() { return m_Header->m_x; }
-	int getHeadersBottomLY() { return m_Header->m_y + m_Header->m_Height; }
+	int getHeadersBottomLY() { return m_Header->m_y + m_Header->s_Height; }
 
 private:
 

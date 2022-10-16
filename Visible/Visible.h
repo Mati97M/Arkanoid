@@ -24,14 +24,14 @@ class Visible
 protected:
 	//virtual Sprite* getSprite() = 0;
 	static VisiblesList s_Visibles;
-	int m_Width, m_Height;
-	int m_x, m_y;
+	//static int m_Width, m_Height;
+	float m_x, m_y;
 	const double m_relativeX;
 	const double m_relativeY;
-	double m_ScreenWidthratio = 1.;
-	double m_ScreenHeigthratio = 1.;
+	//double m_ScreenWidthratio = 1.;
+	//double m_ScreenHeigthratio = 1.;
 
-	Visible(int a_width, int a_height, int x, int y, double a_relativeX, double a_relativeY);
+	Visible(float a_relativeX, float a_relativeY);
 
 	virtual ~Visible()
 	{
@@ -39,9 +39,7 @@ protected:
 		//delete m_Sprite;	// wyjatek!!!!!!!!!
 	}
 
-	static Sprite* InitSprite(Sprite* a_sprite, const char* a_SpritePath);
-
 	friend class Arkanoid;
-	friend class Resizer;
+	//friend class Resizer;
 };
 

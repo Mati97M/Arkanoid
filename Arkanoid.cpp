@@ -37,9 +37,10 @@ void Arkanoid::PreInit(int& width, int& height, bool& fullscreen)
 }
 bool Arkanoid::Init()
 {
-	Resizer::ResizerInit();
-	WIDTH = Resizer::getScreenWidth();
-	HEIGHT = Resizer::getScreenHeight();
+	//Resizer::ResizerInit();
+	getScreenSize(WIDTH, HEIGHT);
+	//WIDTH = Resizer::getScreenWidth();
+	//HEIGHT = Resizer::getScreenHeight();
 
 	try
 	{
@@ -56,15 +57,15 @@ bool Arkanoid::Init()
 
 void Arkanoid::prepareEnv()
 {
-	m_Background = new BackGround(WIDTH, HEIGHT, 0, 0, 0, 0);
-	m_Header = new Header(WIDTH, 64, 0, 0, 0, 0);
+	m_Background = new BackGround(1, 1, 0.f, 0.f); //(WIDTH, HEIGHT, 0, 0, 0, 0);
+	m_Header = new Header(1, 800 / 64, 0.f, 0.f);//(WIDTH, 64, 0, 0, 0, 0);
 
 	/////  lifes
-	Life::s_LifeCounter = 7;
+	Life::s_LifeCounter = 3;
 	for (int i = 0; i < Life::s_LifeCounter; i++)
 	{
-		int x = 10 * i + 55 * i;
-		auto life = new Life(55, 55, x, 5 , static_cast<double>(x)/ WIDTH, 5. / HEIGHT);
+		//int x = 10 * i + 55 * i;
+		auto life = new Life(600 / 60, 800/60 , i* 65.f/600, 4.f / 800); //(55, 55, x, 5 , static_cast<double>(x)/ WIDTH, 5. / HEIGHT);
 		Life::s_lifeList.push_back(life);
 
 	}
@@ -78,16 +79,17 @@ void Arkanoid::prepareEnv()
 void Arkanoid::InitSprites()
 {
 	m_spBackground = InitSprite(m_spBackground, "data/background.png");
-	setSpriteSize(m_spBackground, m_Background->m_Width, m_Background->m_Height);
+	setSpriteSize(m_spBackground, BackGround::s_Width, BackGround::s_Height);
 
 	m_spHeader = InitSprite(m_spHeader, "data/Header_600x64.png");
-	setSpriteSize(m_spHeader, m_Header->m_Width, m_Header->m_Height);
+	setSpriteSize(m_spHeader, Header::s_Width, Header::s_Height);
 
 	m_spLife = InitSprite(m_spLife, "data/life.png");
-	if (!Life::s_lifeList.empty())
-	{
-		setSpriteSize(m_spLife, Life::s_lifeList.front()->m_Width, Life::s_lifeList.front()->m_Height);
-	}
+	setSpriteSize(m_spLife, Life::s_Width, Life::s_Height);
+	//if (!Life::s_lifeList.empty())
+	//{
+	//	setSpriteSize(m_spLife, Life::s_lifeList.front()->m_Width, Life::s_lifeList.front()->m_Height);
+	//}
 
 	(*m_TypesOfSpriteBlocks)['B'] = InitSprite(m_spLife, "data/B.png");
 	(*m_TypesOfSpriteBlocks)['G'] = InitSprite(m_spLife, "data/G.png");
@@ -100,7 +102,7 @@ void Arkanoid::InitSprites()
 	{
 		for (auto& block : Block::s_BlocksList)
 		{
-			setSpriteSize((*m_TypesOfSpriteBlocks)[block->m_Color], block->m_Width, block->m_Height);
+			setSpriteSize((*m_TypesOfSpriteBlocks)[block->m_Color], Block::s_Width, Block::s_Height);
 		
 		}
 		

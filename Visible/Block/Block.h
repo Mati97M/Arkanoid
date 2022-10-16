@@ -10,14 +10,12 @@ using SpritesBlocks = std::map<char,Sprite*>;
 class Block : public Visible
 {
 	static BlocksList s_BlocksList;
-	//static int m_Width;
-	//static int m_Width;
+	static int s_Width, s_Height;
 	char m_Color;
 	bool m_visible;
 
-	Block(int a_width, int a_height, int x, int y, double a_relativeX, double a_relativeY) : m_Color{}, m_visible{true}, Visible(a_width, a_height, x, y, a_relativeX, a_relativeY) {}
-	virtual ~Block() {}
-	static void createBlocks(const int screenWidth, const int screenHeight, int startX, int startY);
+	Block(int widthDivider, int heightDivider, float a_relativeX, float a_relativeY);
+	static void createBlocks(const int& screenWidth, const int& screenHeight, int startX, int startY);
 	static void drawBlocks( SpritesBlocks & blockSprites);
 
 	friend class Arkanoid;

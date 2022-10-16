@@ -3,7 +3,9 @@
 
 class Header : public Visible
 {
-	Header(int a_width, int a_height, int x, int y, double a_relativeX, double a_relativeY);
+	static int s_Width, s_Height;
+
+	Header(int widthDivider, int heightDivider, float a_relativeX, float a_relativeY);
 	virtual ~Header()
 	{
 		//destroySprite(s_Sprite);
@@ -13,5 +15,5 @@ class Header : public Visible
 	//}
 
 	friend Arkanoid;
-	friend Resizer;
+	//friend Resizer;
 };

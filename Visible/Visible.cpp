@@ -1,7 +1,8 @@
 #include "Visible.h"
 
-VisiblesList Visible::s_Visibles{};
-
+//VisiblesList Visible::s_Visibles{};
+int Visible::s_Width{};
+int Visible::s_Height{};
 
 Visible::Visible(float a_relativeX, float a_relativeY) : m_relativeX{ a_relativeX }, m_relativeY{ a_relativeY }
 {

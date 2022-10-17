@@ -5,6 +5,7 @@
 #include <iostream>
 #include <string>
 #include "Arkanoid.h"
+#include <ctime>
 
 struct SreenDimensions
 {
@@ -18,6 +19,7 @@ SreenDimensions get_sizes(int argc, char* argv[]);
 
 int main(int argc, char* argv[])
 {
+	srand(time(nullptr));
 	//////////////// wymiary okna poczatek
 	SreenDimensions dimensions{ get_sizes(argc,argv) };
 	//////////////////// wymiary okna koniec
@@ -28,11 +30,10 @@ int main(int argc, char* argv[])
 
 	//f->Init();
 	//getScreenSize(width,height);
-	run(f);
-	std::cout << (f->GetTitle()) << std::endl;
+	int result = run(f);
 	delete f;
 	//return run();
-	return 0;
+	return result;
 }
 
 

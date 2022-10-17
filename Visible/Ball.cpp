@@ -22,4 +22,14 @@ Ball::Ball(int widthDivider, int heightDivider, float a_relativeX, float a_relat
 	m_x = m_platform->getMiddle() - s_Height / 2;
 	m_y = m_platform->getY() - s_Height - 3;
 	initialPosition = std::make_pair( m_x, m_y );
+
+	m_animator = std::make_unique<Animation>(0.7f);
 }
+
+void Ball::getCoordinates(int& x, int& y, int& w, int& h) const
+{
+	x = static_cast<int>(m_x);
+	y = static_cast<int>(m_y);
+	w = Ball::s_Width;
+	h = Ball::s_Height;
+};

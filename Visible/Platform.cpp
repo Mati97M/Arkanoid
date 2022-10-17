@@ -20,5 +20,13 @@ Platform::Platform(int widthDivider, int heightDivider, float a_relativeX, float
 	}
 
 	initialPosition = std::make_pair(m_x, m_y);
-
+	m_animator = std::make_unique<Animation>(0.00006f);
 }
+
+void Platform::getCoordinates(int& x, int& y, int& w, int& h) const
+{
+	x = static_cast<int>(m_x);
+	y = static_cast<int>(m_y);
+	w = Platform::s_Width;
+	h = Platform::s_Height;
+};

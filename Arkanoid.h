@@ -52,6 +52,7 @@ public:
 private:
 
 	void drawVisibles();
+	void manageKeyboard();
 
 	void prepareEnv();
 

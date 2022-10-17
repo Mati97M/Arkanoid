@@ -1,4 +1,5 @@
 #include "Arkanoid.h"
+#include "User/KeyBoard.h"
 
 Arkanoid::Arkanoid(int width, int height, bool fullscreen) : WIDTH{ width }, HEIGHT{ height }, FULLSCREEN{ fullscreen }, m_spBackground{}, m_spHeader{}, m_spLife{}, m_TypesOfSpriteBlocks{new SpritesBlocks }, Framework() {}
 
@@ -56,12 +57,13 @@ bool Arkanoid::Init()
 		std::cout << e.what << std::endl;
 		return false;
 	}
+	std::cout << "Welcome in game: " << GetTitle() << " " << WIDTH << "x" << HEIGHT << std::endl;
 	return true;
 }
 
 void Arkanoid::prepareEnv()
 {
-	std::cout << getTickCount() << std::endl;
+	//std::cout << getTickCount() << std::endl;
 	m_Background = new BackGround(1, 1, 0.f, 0.f); //(WIDTH, HEIGHT, 0, 0, 0, 0);
 	m_Header = new Header(1, 800 / 64, 0.f, 0.f);//(WIDTH, 64, 0, 0, 0, 0);
 	std::cout << getTickCount() << std::endl;
@@ -75,6 +77,7 @@ void Arkanoid::prepareEnv()
 
 	}
 	///// blocks
+	std::cout << getTickCount() << std::endl;
 	Block::createBlocks(WIDTH, HEIGHT,getHeadersBottomLX(),getHeadersBottomLY());
 	std::cout << getTickCount() << std::endl;
 
@@ -145,11 +148,47 @@ void Arkanoid::Close() {
 
 bool Arkanoid::Tick() {
 
-		//drawTestBackground();
-		drawVisibles();
+	unsigned dt = getTickCount();
+	if (KeyBoard::isAnyKeyPressed())
+	{
+		manageKeyboard();
+	}
+	drawVisibles();
+
+	static float initial_speed = 1000* m_Platform->getVelocity();
+	if(float curr_speed = 1000 *  m_Platform->getVelocity(); initial_speed != curr_speed)
+		std::cout << m_Platform->getVelocity() << std::endl;
+	//std::cout << m_Platform-> getMiddle() << std::endl;
 
 		return false;
+
+		//jesli np chcemy.....  no wlasnie, co?
+		//return true; //exits the aplication
 	}
+
+void Arkanoid::manageKeyboard()
+{
+
+
+	for (const auto& key : KeyBoard::s_keyboardState)
+	{
+		if (key.second == true)
+		{
+			switch (key.first)
+			{
+			case FRKey::RIGHT:
+				m_Platform->m_animator->moveRight(m_Platform->m_x, getTickCount(),m_Platform);
+				break;
+			case FRKey::LEFT:
+				m_Platform->m_animator->moveLeft(m_Platform->m_x, getTickCount(),m_Platform);
+				break;
+			default:
+				break;
+			}
+		}
+
+	}
+}
 
 void Arkanoid::onMouseMove(int x, int y, int xrelative, int yrelative) {
 
@@ -159,10 +198,24 @@ void Arkanoid::onMouseButtonClick(FRMouseButton button, bool isReleased) {
 
 	}
 
-void Arkanoid::onKeyPressed(FRKey k) {
-	}
+void Arkanoid::onKeyPressed(FRKey k)
+{
+	KeyBoard::s_keyboardState[k] = true;
+	//switch (k)
+	//{
+	//case FRKey::RIGHT:
+	//	m_Platform->m_animator->moveRight(m_Platform->m_x,getTickCount());
+	//	break;
+	//case FRKey::LEFT:
+	//	m_Platform->m_animator->moveLeft(m_Platform->m_x, getTickCount());
+	//	break;
+	//default:
+	//	break;
+	//}
+}
 
 void Arkanoid::onKeyReleased(FRKey k) {
+	KeyBoard::s_keyboardState[k] = false;
 	}
 
 const char* Arkanoid::GetTitle()

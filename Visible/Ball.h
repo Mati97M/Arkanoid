@@ -1,10 +1,13 @@
 #pragma once
 #include "Visible.h"
+#include "../Animation/Animation.h"
+#include <memory>
 
 class Platform;
 
 class Ball : public Visible
 {
+	std::unique_ptr<Animation> m_animator;
 	static int s_Width, s_Height;
 	Platform* m_platform;
 	static std::pair<int, int> initialPosition;
@@ -14,8 +17,12 @@ class Ball : public Visible
 	{
 
 	}
-
+public:
+	void getCoordinates(int& x, int& y, int& w, int& h) const;
+	int getX() { return m_x; }
+	int getY() { return m_y; }
+	int getW() { return s_Width; }
+	int getH() { return s_Height; }
 
 	friend Arkanoid;
-
 };

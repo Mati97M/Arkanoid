@@ -14,12 +14,18 @@ struct InitializationException
 	std::string what{ "Error occured while creating sprite" };
 };
 
+//struct Coordinates
+//{
+//	int x, y, w, h;
+//};
 
 class Visible;
 using VisiblesList = std::list<Visible*>;
 
 class Visible
 {
+	static int s_Width;
+	static int s_Height;
 
 protected:
 	//virtual Sprite* getSprite() = 0;
@@ -38,6 +44,10 @@ protected:
 		//s_Visibles.pop_back();
 		//delete m_Sprite;	// wyjatek!!!!!!!!!
 	}
+public:
+	virtual void getCoordinates(int& x, int& y, int& w, int& h) const {};
+	virtual int getW() { return s_Width; }
+	virtual int getH() { return s_Height; }
 
 	friend class Arkanoid;
 	//friend class Resizer;

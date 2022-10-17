@@ -2,8 +2,9 @@
 
 int Platform::s_Width{};
 int Platform::s_Height{};
+std::pair<int, int> Platform::initialPosition{};
 
-Platform::Platform(int widthDivider, int heightDivider, float a_relativeX, float a_relativeY) : Visible(a_relativeX, a_relativeY)
+Platform::Platform(int widthDivider, int heightDivider, float a_relativeX, float a_relativeY): m_ball{}, Visible(a_relativeX, a_relativeY)
 {
 	int scrWidth, scrHeight;
 	getScreenSize(scrWidth, scrHeight);
@@ -17,5 +18,7 @@ Platform::Platform(int widthDivider, int heightDivider, float a_relativeX, float
 	{
 		Platform::s_Height = scrHeight / heightDivider;
 	}
+
+	initialPosition = std::make_pair(m_x, m_y);
 
 }

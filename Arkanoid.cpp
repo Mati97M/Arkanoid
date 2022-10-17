@@ -7,6 +7,8 @@ Arkanoid::~Arkanoid()
 	//delete members
 	delete m_Background;
 	delete m_Header;
+	delete m_Platform;
+	delete m_Ball;
 	for (const auto& life : Life::s_lifeList)
 	{
 		delete life;
@@ -17,6 +19,8 @@ Arkanoid::~Arkanoid()
 	destroySprite(m_spBackground);
 	destroySprite(m_spHeader);
 	destroySprite(m_spLife);
+	destroySprite(m_spPlatform);
+	destroySprite(m_spBall);
 	for (auto& sprite : *m_TypesOfSpriteBlocks)
 	{
 		destroySprite(sprite.second);
@@ -57,9 +61,10 @@ bool Arkanoid::Init()
 
 void Arkanoid::prepareEnv()
 {
+	std::cout << getTickCount() << std::endl;
 	m_Background = new BackGround(1, 1, 0.f, 0.f); //(WIDTH, HEIGHT, 0, 0, 0, 0);
 	m_Header = new Header(1, 800 / 64, 0.f, 0.f);//(WIDTH, 64, 0, 0, 0, 0);
-
+	std::cout << getTickCount() << std::endl;
 	/////  lifes
 	Life::s_LifeCounter = 3;
 	for (int i = 0; i < Life::s_LifeCounter; i++)
@@ -71,7 +76,11 @@ void Arkanoid::prepareEnv()
 	}
 	///// blocks
 	Block::createBlocks(WIDTH, HEIGHT,getHeadersBottomLX(),getHeadersBottomLY());
+	std::cout << getTickCount() << std::endl;
 
+	m_Platform = new Platform(600 / (1.5f * 600 / 6), 800 / 50, 0.4f, 0.9f);
+	m_Ball = new Ball(600 / 40, 800 / 40, 0.45f, 0.85f, m_Platform);	//zawsze mozna cos dopisac w konstruktorze, zeby ustawil sie wzgl platformy
+	m_Platform->setBall(m_Ball);
 
 	InitSprites();
 }
@@ -107,6 +116,12 @@ void Arkanoid::InitSprites()
 		}
 		
 	}
+
+	m_spPlatform = InitSprite(m_spPlatform, "data/platform.png");
+	setSpriteSize(m_spPlatform, Platform::s_Width, Platform::s_Height);
+
+	m_spBall = InitSprite(m_spBall, "data/ball.png");
+	setSpriteSize(m_spBall, Ball::s_Width, Ball::s_Height);
 	
 }
 
@@ -169,4 +184,7 @@ void Arkanoid::drawVisibles()
 		drawSprite(m_spLife, life->m_x, life->m_y);
 	}
 	Block::drawBlocks(*m_TypesOfSpriteBlocks);
+	
+	drawSprite(m_spPlatform,m_Platform->m_x,m_Platform->m_y	);
+	drawSprite(m_spBall, m_Ball->m_x, m_Ball->m_y);
 }

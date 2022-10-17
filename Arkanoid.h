@@ -3,6 +3,8 @@
 #include "Visible/Background.h"
 #include "Visible/Life.h"
 #include "Visible/Block/Block.h"
+#include "Visible/Platform.h"
+#include "Visible/Ball.h"
 
 class Arkanoid : public Framework {
 
@@ -12,11 +14,15 @@ class Arkanoid : public Framework {
 	//Resizer* m_Resizer{};
 	BackGround* m_Background{};
 	Header* m_Header{};
+	Platform* m_Platform{};
+	Ball* m_Ball{};
 
 	Sprite* m_spBackground{};
 	Sprite* m_spHeader{};
 	Sprite* m_spLife{};
 	SpritesBlocks* m_TypesOfSpriteBlocks{};
+	Sprite* m_spPlatform{};
+	Sprite* m_spBall{};
 
 public:
 	Arkanoid(int width, int height, bool fullscreen);

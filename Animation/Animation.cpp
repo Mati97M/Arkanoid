@@ -26,16 +26,18 @@ bool Animation::isInsideTheWindow(const Visible* visible)
 		return true;
 }
 
-void Animation::moveRight(float& x, unsigned int dt, Visible* visible)
+void Animation::moveRight(float& x, Visible* visible)
 {
+	unsigned int dt = getTickCount();
 	x += dt * speed;
 	if (!isInsideTheWindow(visible))
 	{
 		x = scrWidth - visible->getW();
 	}
 }
-void Animation::moveLeft(float& x, unsigned int dt, Visible* visible)
+void Animation::moveLeft(float& x, Visible* visible)
 {
+	unsigned int dt = getTickCount();
 	x -= dt * speed;
 	if (!isInsideTheWindow(visible))
 	{

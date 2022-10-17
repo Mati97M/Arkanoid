@@ -6,7 +6,9 @@ using KeyBoardState = std::map< FRKey, bool>;// 1 when was pressed, but not rele
 
 class KeyBoard
 {
+	static bool Enabled;
 	static KeyBoardState s_keyboardState;
+	static bool isKeyPressed(FRKey key);
 	static bool isAnyKeyPressed();
 	friend class Arkanoid;
 };

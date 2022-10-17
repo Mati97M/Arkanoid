@@ -4,8 +4,9 @@ class Animation
 {
 	float speed{};
 	static int scrWidth, scrHeight;
-	void moveRight(float& x, unsigned int dt, Visible* visible);
-	void moveLeft(float& x, unsigned int dt, Visible* visible);
+	void moveRight(float& x, Visible* visible);
+	void moveLeft(float& x, Visible* visible);
+
 	void moveUp(float& y, unsigned int dt, Visible* visible);
 	void moveDown(float& x, unsigned int dt, Visible* visible);
 

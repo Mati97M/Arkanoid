@@ -149,10 +149,9 @@ void Arkanoid::Close() {
 bool Arkanoid::Tick() {
 
 	unsigned dt = getTickCount();
-	if (KeyBoard::isAnyKeyPressed())
-	{
-		manageKeyboard();
-	}
+	//if (KeyBoard::isAnyKeyPressed())
+
+	manageKeyboard();
 	drawVisibles();
 
 	static float initial_speed = 1000* m_Platform->getVelocity();
@@ -168,26 +167,12 @@ bool Arkanoid::Tick() {
 
 void Arkanoid::manageKeyboard()
 {
+	if(KeyBoard::isKeyPressed(FRKey::RIGHT))
+		m_Platform->m_animator->moveRight(m_Platform->m_x, m_Platform);
 
+	if(KeyBoard::isKeyPressed(FRKey::LEFT))
+		m_Platform->m_animator->moveLeft(m_Platform->m_x, m_Platform);
 
-	for (const auto& key : KeyBoard::s_keyboardState)
-	{
-		if (key.second == true)
-		{
-			switch (key.first)
-			{
-			case FRKey::RIGHT:
-				m_Platform->m_animator->moveRight(m_Platform->m_x, getTickCount(),m_Platform);
-				break;
-			case FRKey::LEFT:
-				m_Platform->m_animator->moveLeft(m_Platform->m_x, getTickCount(),m_Platform);
-				break;
-			default:
-				break;
-			}
-		}
-
-	}
 }
 
 void Arkanoid::onMouseMove(int x, int y, int xrelative, int yrelative) {

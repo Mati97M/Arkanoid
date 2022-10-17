@@ -58,7 +58,7 @@ bool Arkanoid::Init()
 		std::cout << e.what << std::endl;
 		return false;
 	}
-	//std::cout << "Welcome in game: " << GetTitle() << " " << WIDTH << "x" << HEIGHT << "	After " <<getTickCount()<< " miliseconds everything is ready. Enjoy ;)" << std::endl;
+	std::cout << "Welcome in game: " << GetTitle() << " " << WIDTH << "x" << HEIGHT << "	After " <<getTickCount()<< " miliseconds everything is ready. Enjoy ;)" << std::endl;
 
 	return true;
 
@@ -154,16 +154,19 @@ bool Arkanoid::Tick() {
 	//m_TickCounter = getTickCount();
 	//if (KeyBoard::isAnyKeyPressed())
 
-	m_Ball->m_animator->moveBall(m_Ball,m_TickCounter);
-	drawVisibles();
+
+
 
 	//static float initial_speed = 1000* m_Platform->getVelocity();
 	//if (float curr_speed = 1000 * m_Platform->getVelocity(); initial_speed != curr_speed) {}
 		//std::cout << m_Platform->getVelocity() << std::endl;
 	//std::cout << m_Platform-> getMiddle() << std::endl;
 
-	manageKeyboard();
 	m_TickCounter = getTickCount();
+	m_Ball->m_animator->moveBall(m_Ball, m_TickCounter);
+	manageKeyboard();
+	drawVisibles();
+
 	return false;
 
 	//jesli np chcemy.....  no wlasnie, co?

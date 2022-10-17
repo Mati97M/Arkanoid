@@ -26,18 +26,16 @@ bool Animation::isInsideTheWindow(const Visible* visible)
 		return true;
 }
 
-void Animation::moveRight(float& x, Visible* visible)
+void Animation::moveRight(float& x, Visible* visible, unsigned dt)
 {
-	unsigned int dt = getTickCount();
 	x += dt * speed;
 	if (!isInsideTheWindow(visible))
 	{
 		x = scrWidth - visible->getW();
 	}
 }
-void Animation::moveLeft(float& x, Visible* visible)
+void Animation::moveLeft(float& x, Visible* visible, unsigned dt)
 {
-	unsigned int dt = getTickCount();
 	x -= dt * speed;
 	if (!isInsideTheWindow(visible))
 	{
@@ -45,13 +43,13 @@ void Animation::moveLeft(float& x, Visible* visible)
 	}
 }
 
-void Animation::moveBall(Ball* ball)
+void Animation::moveBall(Ball* ball, unsigned dt)
 {
 	if (ball->launched)
 	{
-		auto pixelsX = ball->dx / getTickCount() * speed;
+		auto pixelsX = ball->dx / dt * speed;
 		ball->m_x -= pixelsX;
-		auto pixelsY = ball->dy / getTickCount() * speed;
+		auto pixelsY = ball->dy / dt * speed;
 		ball->m_y -= pixelsY;
 	}
 

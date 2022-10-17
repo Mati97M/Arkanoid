@@ -23,7 +23,7 @@ Ball::Ball(int widthDivider, int heightDivider, float a_relativeX, float a_relat
 	m_y = m_platform->getY() - s_Height - 3;
 	initialPosition = std::make_pair( m_x, m_y );
 
-	m_animator = std::make_unique<Animation>(2.8f);
+	m_animator = std::make_unique<Animation>(4.5f);
 }
 
 void Ball::launch(int mouse_x, int mouse_y)

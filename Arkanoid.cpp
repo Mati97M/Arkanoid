@@ -58,7 +58,7 @@ bool Arkanoid::Init()
 		std::cout << e.what << std::endl;
 		return false;
 	}
-	std::cout << "Welcome in game: " << GetTitle() << " " << WIDTH << "x" << HEIGHT << "	After " <<getTickCount()<< " miliseconds everything is ready. Enjoy ;)" << std::endl;
+	//std::cout << "Welcome in game: " << GetTitle() << " " << WIDTH << "x" << HEIGHT << "	After " <<getTickCount()<< " miliseconds everything is ready. Enjoy ;)" << std::endl;
 
 	return true;
 
@@ -69,7 +69,7 @@ void Arkanoid::prepareEnv()
 	//std::cout << getTickCount() << std::endl;
 	m_Background = new BackGround(1, 1, 0.f, 0.f); //(WIDTH, HEIGHT, 0, 0, 0, 0);
 	m_Header = new Header(1, 800 / 64, 0.f, 0.f);//(WIDTH, 64, 0, 0, 0, 0);
-	std::cout << getTickCount() << std::endl;
+	//std::cout << getTickCount() << std::endl;
 	/////  lifes
 	Life::s_LifeCounter = 3;
 	for (int i = 0; i < Life::s_LifeCounter; i++)
@@ -80,9 +80,9 @@ void Arkanoid::prepareEnv()
 
 	}
 	///// blocks
-	std::cout << getTickCount() << std::endl;
+	//std::cout << getTickCount() << std::endl;
 	Block::createBlocks(WIDTH, HEIGHT,getHeadersBottomLX(),getHeadersBottomLY());
-	std::cout << getTickCount() << std::endl;
+	//std::cout << getTickCount() << std::endl;
 
 	m_Platform = new Platform(600 / (1.5f * 600 / 6), 800 / 50, 0.4f, 0.9f);
 	m_Ball = new Ball(600 / 40, 800 / 40, 0.45f, 0.85f, m_Platform);	//zawsze mozna cos dopisac w konstruktorze, zeby ustawil sie wzgl platformy
@@ -154,8 +154,7 @@ bool Arkanoid::Tick() {
 	//m_TickCounter = getTickCount();
 	//if (KeyBoard::isAnyKeyPressed())
 
-	manageKeyboard();
-	m_Ball->m_animator->moveBall(m_Ball);
+	m_Ball->m_animator->moveBall(m_Ball,m_TickCounter);
 	drawVisibles();
 
 	//static float initial_speed = 1000* m_Platform->getVelocity();
@@ -163,11 +162,13 @@ bool Arkanoid::Tick() {
 		//std::cout << m_Platform->getVelocity() << std::endl;
 	//std::cout << m_Platform-> getMiddle() << std::endl;
 
-		return false;
+	manageKeyboard();
+	m_TickCounter = getTickCount();
+	return false;
 
-		//jesli np chcemy.....  no wlasnie, co?
-		//return true; //exits the aplication
-	}
+	//jesli np chcemy.....  no wlasnie, co?
+	//return true; //exits the aplication	
+}
 
 //void Arkanoid::manageMouse()
 //{
@@ -182,10 +183,10 @@ void Arkanoid::manageKeyboard()
 	if (KeyBoard::s_Enabled)
 	{
 		if (KeyBoard::isKeyPressed(FRKey::RIGHT))
-			m_Platform->m_animator->moveRight(m_Platform->m_x, m_Platform);
+			m_Platform->m_animator->moveRight(m_Platform->m_x, m_Platform, m_TickCounter);
 
 		if (KeyBoard::isKeyPressed(FRKey::LEFT))
-			m_Platform->m_animator->moveLeft(m_Platform->m_x, m_Platform);
+			m_Platform->m_animator->moveLeft(m_Platform->m_x, m_Platform, m_TickCounter);
 	}
 
 

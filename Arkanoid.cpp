@@ -2,7 +2,7 @@
 #include "User/KeyBoard.h"
 #include "User/Mouse.h"
 
-Arkanoid::Arkanoid(int width, int height, bool fullscreen) : WIDTH{ width }, HEIGHT{ height }, FULLSCREEN{ fullscreen }, m_spBackground{}, m_spHeader{}, m_spLife{}, start{ true }, m_TypesOfSpriteBlocks{ new SpritesBlocks }, Framework() {}
+Arkanoid::Arkanoid(int width, int height, bool fullscreen) : WIDTH{ width }, HEIGHT{ height }, FULLSCREEN{ fullscreen }, m_spBackground{}, m_spHeader{}, m_spLife{}, start{ true }, m_TypesOfSpriteBlocks{ new SpritesBlocks }, m_TickCounter{}, Framework() {}
 
 Arkanoid::~Arkanoid()
 {
@@ -58,8 +58,10 @@ bool Arkanoid::Init()
 		std::cout << e.what << std::endl;
 		return false;
 	}
-	std::cout << "Welcome in game: " << GetTitle() << " " << WIDTH << "x" << HEIGHT << std::endl;
+	std::cout << "Welcome in game: " << GetTitle() << " " << WIDTH << "x" << HEIGHT << "	After " <<getTickCount()<< " miliseconds everything is ready. Enjoy ;)" << std::endl;
+
 	return true;
+
 }
 
 void Arkanoid::prepareEnv()
@@ -149,15 +151,15 @@ void Arkanoid::Close() {
 
 bool Arkanoid::Tick() {
 
-	//unsigned dt = getTickCount();
+	//m_TickCounter = getTickCount();
 	//if (KeyBoard::isAnyKeyPressed())
 
 	manageKeyboard();
 	m_Ball->m_animator->moveBall(m_Ball);
 	drawVisibles();
 
-	static float initial_speed = 1000* m_Platform->getVelocity();
-	if (float curr_speed = 1000 * m_Platform->getVelocity(); initial_speed != curr_speed) {}
+	//static float initial_speed = 1000* m_Platform->getVelocity();
+	//if (float curr_speed = 1000 * m_Platform->getVelocity(); initial_speed != curr_speed) {}
 		//std::cout << m_Platform->getVelocity() << std::endl;
 	//std::cout << m_Platform-> getMiddle() << std::endl;
 

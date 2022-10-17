@@ -25,6 +25,8 @@ class Arkanoid : public Framework {
 	Sprite* m_spPlatform{};
 	Sprite* m_spBall{};
 
+	unsigned m_TickCounter{};
+
 public:
 	Arkanoid(int width, int height, bool fullscreen);
 	virtual ~Arkanoid();

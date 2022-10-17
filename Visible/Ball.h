@@ -7,6 +7,8 @@ class Platform;
 
 class Ball : public Visible
 {
+	float dx, dy;
+	bool launched;
 	std::unique_ptr<Animation> m_animator;
 	static int s_Width, s_Height;
 	Platform* m_platform;
@@ -17,6 +19,8 @@ class Ball : public Visible
 	{
 
 	}
+	void launch(int mouse_x, int mouse_y);
+
 public:
 	void getCoordinates(int& x, int& y, int& w, int& h) const;
 	int getX() { return m_x; }
@@ -25,4 +29,5 @@ public:
 	int getH() { return s_Height; }
 
 	friend Arkanoid;
+	friend Animation;
 };

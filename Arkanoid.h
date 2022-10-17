@@ -11,6 +11,7 @@ class Arkanoid : public Framework {
 	int WIDTH{};
 	int HEIGHT{};
 	bool FULLSCREEN{};
+	bool start{true};
 	//Resizer* m_Resizer{};
 	BackGround* m_Background{};
 	Header* m_Header{};
@@ -53,6 +54,7 @@ private:
 
 	void drawVisibles();
 	void manageKeyboard();
+	//void manageMouse();
 
 	void prepareEnv();
 

@@ -44,6 +44,20 @@ void Animation::moveLeft(float& x, Visible* visible)
 		x = 0;
 	}
 }
+
+void Animation::moveBall(Ball* ball)
+{
+	if (ball->launched)
+	{
+		auto pixelsX = ball->dx / getTickCount() * speed;
+		ball->m_x -= pixelsX;
+		auto pixelsY = ball->dy / getTickCount() * speed;
+		ball->m_y -= pixelsY;
+	}
+
+}
+
+
 void Animation::moveUp(float& y, unsigned int dt, Visible* visible)		////////////////  zmienic na ksztalt tamtych  KOLEJNOSC
 {
 	if (isInsideTheWindow(visible))

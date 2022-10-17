@@ -1,7 +1,7 @@
 #include "KeyBoard.h"
 
 KeyBoardState KeyBoard::s_keyboardState{};
-bool KeyBoard::Enabled{ false };
+bool KeyBoard::s_Enabled{ false };
 
 bool KeyBoard::isKeyPressed(FRKey key)
 {

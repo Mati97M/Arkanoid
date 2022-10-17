@@ -1,7 +1,8 @@
 #include "Arkanoid.h"
 #include "User/KeyBoard.h"
+#include "User/Mouse.h"
 
-Arkanoid::Arkanoid(int width, int height, bool fullscreen) : WIDTH{ width }, HEIGHT{ height }, FULLSCREEN{ fullscreen }, m_spBackground{}, m_spHeader{}, m_spLife{}, m_TypesOfSpriteBlocks{new SpritesBlocks }, Framework() {}
+Arkanoid::Arkanoid(int width, int height, bool fullscreen) : WIDTH{ width }, HEIGHT{ height }, FULLSCREEN{ fullscreen }, m_spBackground{}, m_spHeader{}, m_spLife{}, start{ true }, m_TypesOfSpriteBlocks{ new SpritesBlocks }, Framework() {}
 
 Arkanoid::~Arkanoid()
 {
@@ -148,15 +149,16 @@ void Arkanoid::Close() {
 
 bool Arkanoid::Tick() {
 
-	unsigned dt = getTickCount();
+	//unsigned dt = getTickCount();
 	//if (KeyBoard::isAnyKeyPressed())
 
 	manageKeyboard();
+	m_Ball->m_animator->moveBall(m_Ball);
 	drawVisibles();
 
 	static float initial_speed = 1000* m_Platform->getVelocity();
-	if(float curr_speed = 1000 *  m_Platform->getVelocity(); initial_speed != curr_speed)
-		std::cout << m_Platform->getVelocity() << std::endl;
+	if (float curr_speed = 1000 * m_Platform->getVelocity(); initial_speed != curr_speed) {}
+		//std::cout << m_Platform->getVelocity() << std::endl;
 	//std::cout << m_Platform-> getMiddle() << std::endl;
 
 		return false;
@@ -165,21 +167,73 @@ bool Arkanoid::Tick() {
 		//return true; //exits the aplication
 	}
 
+//void Arkanoid::manageMouse()
+//{
+//	if (Mouse::s_Enabled)
+//	{
+//
+//	}
+//}
+
 void Arkanoid::manageKeyboard()
 {
-	if(KeyBoard::isKeyPressed(FRKey::RIGHT))
-		m_Platform->m_animator->moveRight(m_Platform->m_x, m_Platform);
+	if (KeyBoard::s_Enabled)
+	{
+		if (KeyBoard::isKeyPressed(FRKey::RIGHT))
+			m_Platform->m_animator->moveRight(m_Platform->m_x, m_Platform);
 
-	if(KeyBoard::isKeyPressed(FRKey::LEFT))
-		m_Platform->m_animator->moveLeft(m_Platform->m_x, m_Platform);
+		if (KeyBoard::isKeyPressed(FRKey::LEFT))
+			m_Platform->m_animator->moveLeft(m_Platform->m_x, m_Platform);
+	}
+
 
 }
 
 void Arkanoid::onMouseMove(int x, int y, int xrelative, int yrelative) {
-
-	}
+	Mouse::x = x;
+	Mouse::y = y;
+	Mouse::xrelative = xrelative;
+	Mouse::yrelative = yrelative;
+	//std::cout << "xrelative, yrelative:  " << xrelative << ' ' << yrelative << std::endl;
+	std::cout << "x, y:  " << x<< ' ' << y<< std::endl;
+}				
 
 void Arkanoid::onMouseButtonClick(FRMouseButton button, bool isReleased) {
+	if (Mouse::s_Enabled)
+	{
+		switch (button)
+		{
+		case FRMouseButton::LEFT:
+
+			//wystrzel kulke jesli kulka jest poza ekranem i masz zycia		lub
+			//zagraj jeszcze raz
+			if (!m_Ball->m_animator->isInsideTheWindow(m_Ball) || start)
+			{
+				if (!Life::s_lifeList.empty())
+				{
+					m_Ball->launch(Mouse::x, Mouse::y);
+					KeyBoard::s_Enabled = true;
+					Mouse::s_Enabled = false;
+					showCursor(false);
+					
+				}
+				else
+				{
+					showCursor(true);
+					Mouse::s_Enabled = true;
+					//restart
+				}
+				//Mouse::s_Enabled = false;
+			}
+			break;
+
+		case FRMouseButton::RIGHT:
+			//losuj umiejetnosc
+			break;
+		default:
+			break;
+		}
+	}
 
 	}
 
@@ -223,6 +277,7 @@ void Arkanoid::drawVisibles()
 	}
 	Block::drawBlocks(*m_TypesOfSpriteBlocks);
 	
-	drawSprite(m_spPlatform,m_Platform->m_x,m_Platform->m_y	);
 	drawSprite(m_spBall, m_Ball->m_x, m_Ball->m_y);
+	drawSprite(m_spPlatform,m_Platform->m_x,m_Platform->m_y	);
+
 }

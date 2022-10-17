@@ -23,7 +23,7 @@ Ball::Ball(int widthDivider, int heightDivider, float a_relativeX, float a_relat
 	m_y = m_platform->getY() - s_Height - 3;
 	initialPosition = std::make_pair( m_x, m_y );
 
-	m_animator = std::make_unique<Animation>(0.8f);
+	m_animator = std::make_unique<Animation>(10.f);
 }
 
 void Ball::launch(int mouse_x, int mouse_y)
@@ -31,6 +31,14 @@ void Ball::launch(int mouse_x, int mouse_y)
 	dx = static_cast<float>(m_x - mouse_x);
 	dy = static_cast<float>(m_y - mouse_y);
 	launched = true;
+}
+
+void Ball::OnOutsideTheWidow()
+{
+	m_x = initialPosition.first;
+	m_y = initialPosition.second;
+
+	launched = false;
 }
 
 void Ball::getCoordinates(int& x, int& y, int& w, int& h) const

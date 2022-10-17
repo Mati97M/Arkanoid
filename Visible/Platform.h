@@ -18,6 +18,11 @@ class Platform : public Visible
 	void setBall(Ball* a_ball) {
 		m_ball = a_ball ? a_ball : nullptr;
 	}
+	void OnOutsideTheWidow()
+	{
+		m_x = initialPosition.first;
+		m_y = initialPosition.second;
+	}
 
 public:
 	int getX() { return m_x; }

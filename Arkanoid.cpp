@@ -72,13 +72,7 @@ void Arkanoid::prepareEnv()
 	//std::cout << getTickCount() << std::endl;
 	/////  lifes
 	Life::s_LifeCounter = 3;
-	for (int i = 0; i < Life::s_LifeCounter; i++)
-	{
-		//int x = 10 * i + 55 * i;
-		auto life = new Life(600 / 60, 800/60 , i* 65.f/600, 4.f / 800); //(55, 55, x, 5 , static_cast<double>(x)/ WIDTH, 5. / HEIGHT);
-		Life::s_lifeList.push_back(life);
-
-	}
+	giveLifes();
 	///// blocks
 	//std::cout << getTickCount() << std::endl;
 	Block::createBlocks(WIDTH, HEIGHT,getHeadersBottomLX(),getHeadersBottomLY());
@@ -144,6 +138,25 @@ Sprite* Arkanoid::InitSprite(Sprite* a_sprite, const char* a_SpritePath)
 	return a_sprite;
 }
 
+void Arkanoid::giveLifes()
+{
+	for (int i = 0; i < Life::s_LifeCounter; i++)
+	{
+		auto life = new Life(600 / 60, 800 / 60, i * 65.f / 600, 4.f / 800);
+		Life::s_lifeList.push_back(life);
+
+	}
+}
+
+bool Arkanoid::isEndOfGame()
+{
+	bool EndOfGame = Life::s_lifeList.empty();
+	if (EndOfGame)
+	{
+		std::cout << "Congratulations! Your score is: " << std::endl; //////////////////////
+	}
+	return EndOfGame;
+}
 
 void Arkanoid::Close() {
 
@@ -155,7 +168,19 @@ bool Arkanoid::Tick() {
 	//if (KeyBoard::isAnyKeyPressed())
 
 
+	if (!m_Ball->m_animator->isInsideTheWindow(m_Ball))
+	{
+		m_Ball->OnOutsideTheWidow();
+		m_Platform->OnOutsideTheWidow();
+		KeyBoard::s_Enabled = false;
+		Mouse::s_Enabled = true;
+		showCursor(true);
+		//start = false;
+		size_t lifesNum =  Life::damageLife();
+		//if (lifesNum == 0)
+		//	start = false;
 
+	}
 
 	//static float initial_speed = 1000* m_Platform->getVelocity();
 	//if (float curr_speed = 1000 * m_Platform->getVelocity(); initial_speed != curr_speed) {}
@@ -213,7 +238,7 @@ void Arkanoid::onMouseButtonClick(FRMouseButton button, bool isReleased) {
 
 			//wystrzel kulke jesli kulka jest poza ekranem i masz zycia		lub
 			//zagraj jeszcze raz
-			if (!m_Ball->m_animator->isInsideTheWindow(m_Ball) || start)
+			if (m_Ball->m_animator->isInsideTheWindow(m_Ball) || !m_Ball->launched)
 			{
 				if (!Life::s_lifeList.empty())
 				{
@@ -221,13 +246,14 @@ void Arkanoid::onMouseButtonClick(FRMouseButton button, bool isReleased) {
 					KeyBoard::s_Enabled = true;
 					Mouse::s_Enabled = false;
 					showCursor(false);
+					start = false;
 					
 				}
-				else
+				else//////////////???????????????????
 				{
 					showCursor(true);
 					Mouse::s_Enabled = true;
-					//restart
+					
 				}
 				//Mouse::s_Enabled = false;
 			}
@@ -235,6 +261,25 @@ void Arkanoid::onMouseButtonClick(FRMouseButton button, bool isReleased) {
 
 		case FRMouseButton::RIGHT:
 			//losuj umiejetnosc
+			if (m_Ball->launched)	// i ilosc pkt  > 20
+			{
+				//losuj  add life  albo damage life
+			}
+			//restart
+			else if (m_Ball->m_animator->isInsideTheWindow(m_Ball) && isEndOfGame())		//m_Ball->m_animator->isInsideTheWindow(m_Ball)  war zbedny
+			{
+				Life::s_LifeCounter = 3;
+				giveLifes();
+				Block::turnOnVisibility();
+			}
+			
+			//if (m_Ball->m_animator->isInsideTheWindow(m_Ball) || start)
+			//{
+			//	Life::s_LifeCounter = 3;
+			//	giveLifes();
+			//	Block::turnOnVisibility();
+			//}
+			
 			break;
 		default:
 			break;

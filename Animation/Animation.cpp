@@ -2,6 +2,7 @@
 #include "../Framework.h"
 #include "../Visible/Ball.h"
 #include "../Visible/Platform.h"
+#include "../Visible/Header.h"
 
 int Animation::scrWidth{};
 int Animation::scrHeight{};
@@ -51,6 +52,11 @@ void Animation::moveBall(Ball* ball, unsigned dt)
 		ball->m_x -= pixelsX;
 		auto pixelsY = ball->dy / dt * speed;
 		ball->m_y -= pixelsY;
+
+
+		if (ball->m_x < 0 || ball->m_x + ball->s_Width > scrWidth)  ball->dx = -(ball->dx);
+		if (ball->m_y < Header::getH())   ball->dy = -(ball->dy);		//|| ball->m_y  + ball->s_Height > scrHeight)
+
 	}
 
 }

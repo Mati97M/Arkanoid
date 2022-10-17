@@ -92,6 +92,13 @@ void Block::drawBlocks(SpritesBlocks& blockSprites)
 	}
 }
 
+void Block::turnOnVisibility()
+{
+	for (auto* block : s_BlocksList)
+	{
+		block->m_visible = true;
+	}
+}
 
 //void Block::setBlocksSpriteSize(SpritesBlocks& blockSprites)
 //{

@@ -13,7 +13,8 @@ class Header : public Visible
 	//Sprite* getSprite() override {
 	//	return s_Sprite;
 	//}
-
+public:
+	static int getH() { return s_Height; }
 	friend Arkanoid;
 	//friend Resizer;
 };

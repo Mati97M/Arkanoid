@@ -49,6 +49,11 @@ public:
 
 	virtual const char* GetTitle() override;
 
+	void giveLifes();
+
+public:
+	bool static isEndOfGame();
+
 	int getHeadersBottomLX() { return m_Header->m_x; }
 	int getHeadersBottomLY() { return m_Header->m_y + m_Header->s_Height; }
 

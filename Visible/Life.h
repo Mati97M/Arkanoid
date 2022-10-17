@@ -20,6 +20,10 @@ class Life : public Visible
 	//	return s_Sprite;
 	//}
 
+	static std::size_t damageLife();
+
+	static std::size_t addLife();
+
 	friend Arkanoid;
 	//friend Resizer;
 };

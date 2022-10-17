@@ -17,6 +17,7 @@ class Block : public Visible
 	Block(int widthDivider, int heightDivider, float a_relativeX, float a_relativeY);
 	static void createBlocks(const int& screenWidth, const int& screenHeight, int startX, int startY);
 	static void drawBlocks( SpritesBlocks & blockSprites);
+	static void turnOnVisibility();
 
 	friend class Arkanoid;
 	friend class Resizer;

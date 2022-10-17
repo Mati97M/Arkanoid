@@ -20,7 +20,7 @@ class Ball : public Visible
 
 	}
 	void launch(int mouse_x, int mouse_y);
-
+	void OnOutsideTheWidow();
 public:
 	void getCoordinates(int& x, int& y, int& w, int& h) const;
 	int getX() { return m_x; }

@@ -51,6 +51,7 @@ class Arkanoid : public Framework {
 	//restart
 	static int s_points;
 	int m_comboHits{};
+	static bool s_EndOfGame;
 
 public:
 	Arkanoid(int width, int height, bool fullscreen);
@@ -77,7 +78,9 @@ public:
 	void giveLifes();
 
 public:
-	bool static isEndOfGame();
+	bool static isEndOfGame() {
+		return s_EndOfGame = Life::s_lifeList.empty();
+	}
 
 	int getHeadersBottomLX() { return m_Header->m_x; }
 	int getHeadersBottomLY() { return m_Header->m_y + m_Header->s_Height; }

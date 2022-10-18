@@ -6,6 +6,7 @@ int Life::s_LifeCounter{};
 
 int Life::s_Width{};
 int Life::s_Height{};
+int Life::s_Limit{ 6 };
 
 Life::Life(int widthDivider, int heightDivider, float a_relativeX, float a_relativeY) : Visible(a_relativeX, a_relativeY)
 {
@@ -28,7 +29,8 @@ Life::Life(int widthDivider, int heightDivider, float a_relativeX, float a_relat
 
 std::size_t Life::damageLife() {
 	auto damagedLife = s_lifeList.back();
-	s_lifeList.pop_back();
+	if(!s_lifeList.empty())
+		s_lifeList.pop_back();
 	s_LifeCounter--;
 	delete damagedLife;
 	Arkanoid::isEndOfGame();

@@ -2,7 +2,8 @@
 #include "User/KeyBoard.h"
 #include "User/Mouse.h"
 
-int Arkanoid::s_points;
+int Arkanoid::s_points{};
+bool Arkanoid::s_EndOfGame{};
 
 Arkanoid::Arkanoid(int width, int height, bool fullscreen) : 
 	WIDTH{ width }, HEIGHT{ height }, FULLSCREEN{ fullscreen }, m_spBackground{},
@@ -155,16 +156,6 @@ void Arkanoid::giveLifes()
 	}
 }
 
-bool Arkanoid::isEndOfGame()
-{
-	bool EndOfGame = Life::s_lifeList.empty();
-	if (EndOfGame)
-	{
-		std::cout << "Congratulations! Your score is: "<< s_points << std::endl; //////////////////////
-	}
-	return EndOfGame;
-}
-
 void Arkanoid::Close() {
 
 	}
@@ -208,6 +199,10 @@ bool Arkanoid::Tick() {
 	m_Ball->m_animator->moveBall(m_Ball, m_TickCounter);
 	manageKeyboard();
 	drawVisibles();
+	if (isEndOfGame() && !s_EndOfGame)
+	{
+		std::cout << "Congratulations! Your score is: " << s_points << std::endl; //////////////////////
+	}
 
 	return false;
 
@@ -278,15 +273,16 @@ void Arkanoid::onMouseButtonClick(FRMouseButton button, bool isReleased) {
 
 		case FRMouseButton::RIGHT:
 			//losuj umiejetnosc
-			if (m_Ball->launched && s_points >= 20)	// i ilosc pkt  > 20
+			if (s_points >= 20)	// i ilosc pkt  > 20
 			{
-				//losuj  add life  albo damage life
+				//draw  add life  or damage life
 				auto surprise = Shop::buyAbility();
 				s_points -= 20;
 				switch (surprise)	//more elastic
 				{
 				case Shop::Ability::Positive:
-					Life::addLife();
+					if(Life::canBuy())
+						Life::addLife();
 					break;
 				case Shop::Ability::Negative:
 					Life::damageLife();
@@ -301,6 +297,7 @@ void Arkanoid::onMouseButtonClick(FRMouseButton button, bool isReleased) {
 				Life::s_LifeCounter = 3;
 				giveLifes();
 				Block::turnOnVisibility();
+				s_EndOfGame = false;
 			}
 			
 			//if (m_Ball->m_animator->isInsideTheWindow(m_Ball) || start)

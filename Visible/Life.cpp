@@ -28,12 +28,13 @@ Life::Life(int widthDivider, int heightDivider, float a_relativeX, float a_relat
 }
 
 std::size_t Life::damageLife() {
-	auto damagedLife = s_lifeList.back();
-	if(!s_lifeList.empty())
+	if (!s_lifeList.empty())
+	{
+		auto damagedLife = s_lifeList.back();
 		s_lifeList.pop_back();
-	s_LifeCounter--;
-	delete damagedLife;
-	Arkanoid::isEndOfGame();
+		s_LifeCounter--;
+		delete damagedLife;
+	}
 
 	return s_lifeList.size();
 }

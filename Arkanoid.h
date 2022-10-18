@@ -7,6 +7,8 @@
 #include "Visible/Ball.h"
 #include "CollisionDetector/CollisionDetector.h"
 #include <memory>
+#include "Clock/Clock.h"
+
 
 class Shop
 {
@@ -16,7 +18,8 @@ class Shop
 		Negative
 	};
 public:
-	Ability static buyAbility() {
+	Ability static buyAbility(int& points) {
+		points = -20;
 		if (rand() % 2 == 0)
 			return Ability::Negative;
 		else
@@ -38,7 +41,7 @@ class Arkanoid : public Framework {
 	Platform* m_Platform{};
 	Ball* m_Ball{};
 	std::unique_ptr<CollisionDetector> m_detector{};
-	
+	Clock* m_clock;
 
 	Sprite* m_spBackground{};
 	Sprite* m_spHeader{};
@@ -47,11 +50,12 @@ class Arkanoid : public Framework {
 	Sprite* m_spPlatform{};
 	Sprite* m_spBall{};
 
-	unsigned m_TickCounter{};
+	float m_deltaTime{};
 	//restart
 	static int s_points;
 	int m_comboHits{};
 	static bool s_EndOfGame;
+	static unsigned long timeInSecs;
 
 public:
 	Arkanoid(int width, int height, bool fullscreen);

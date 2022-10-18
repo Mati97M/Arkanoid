@@ -29,7 +29,7 @@ bool Animation::isInsideTheWindow(const Visible* visible)
 
 void Animation::moveRight(float& x, Visible* visible, unsigned dt)
 {
-	x += dt * speed;
+	x += visible->getW() / 2 * dt; //* speed;
 	if (!isInsideTheWindow(visible))
 	{
 		x = scrWidth - visible->getW();
@@ -37,7 +37,8 @@ void Animation::moveRight(float& x, Visible* visible, unsigned dt)
 }
 void Animation::moveLeft(float& x, Visible* visible, unsigned dt)
 {
-	x -= dt * speed;
+	x -= visible->getW() / 2 * dt; //* speed;
+	//x -= dt * speed;
 	if (!isInsideTheWindow(visible))
 	{
 		x = 0;
@@ -48,10 +49,15 @@ void Animation::moveBall(Ball* ball, unsigned dt)
 {
 	if (ball->launched)
 	{
-		auto pixelsX = ball->dx / dt * speed;
+		auto pixelsX = ball->dx * speed * dt;
 		ball->m_x -= pixelsX;
-		auto pixelsY = ball->dy / dt * speed;
+		auto pixelsY = ball->dy * speed * dt;
 		ball->m_y -= pixelsY;
+
+		//auto pixelsX = ball->dx / (dt / speed);
+		//ball->m_x -= pixelsX;
+		//auto pixelsY = ball->dy / (dt/speed);
+		//ball->m_y -= pixelsY;
 
 
 		if (ball->m_x < 0 || ball->m_x + ball->s_Width > scrWidth)  ball->dx = -(ball->dx);

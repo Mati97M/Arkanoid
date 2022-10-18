@@ -30,6 +30,7 @@ int main(int argc, char* argv[])
 
 	//f->Init();
 	//getScreenSize(width,height);
+	std::cout << getTickCount() << std::endl;
 	int result = run(f);
 	delete f;
 	//return run();

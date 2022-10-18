@@ -19,8 +19,8 @@ bool CollisionDetector::WasCollisionWithBlockDetected(Ball* ball, Block* visible
 		b_y <= v_y + v_h
 		)
 	{
-		ball->dx *= -1;
-		ball->dy *= -1;
+		ball->dx = -(ball->dx);
+		ball->dy = -(ball->dy);
 		return true;
 	}
 	else

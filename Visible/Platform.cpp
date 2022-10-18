@@ -20,7 +20,7 @@ Platform::Platform(int widthDivider, int heightDivider, float a_relativeX, float
 	}
 
 	initialPosition = std::make_pair(m_x, m_y);
-	m_animator = std::make_unique<Animation>(0.00006f);
+	m_animator = std::make_unique<Animation>(1.5f);
 }
 
 void Platform::getCoordinates(int& x, int& y, int& w, int& h) const

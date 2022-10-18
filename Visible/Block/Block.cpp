@@ -20,10 +20,9 @@ Block::Block(int widthDivider, int heightDivider, float a_relativeX, float a_rel
 	{
 		Block::s_Height = scrHeight / heightDivider;
 	}
-	if (Block::s_Height && s_Width)
-	{
-
-	}
+	//if (Block::s_Height && s_Width)
+	//{
+	//}
 }
 
 void Block::createBlocks(const int &screenWidth, const int &screenHeight, int startX, int startY)

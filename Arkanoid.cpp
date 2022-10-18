@@ -4,12 +4,13 @@
 
 int Arkanoid::s_points{};
 bool Arkanoid::s_EndOfGame{};
+unsigned long Arkanoid::timeInSecs{};
 
 Arkanoid::Arkanoid(int width, int height, bool fullscreen) : 
 	WIDTH{ width }, HEIGHT{ height }, FULLSCREEN{ fullscreen }, m_spBackground{},
 	m_spHeader{}, m_spLife{}, m_detector{std::make_unique<CollisionDetector>()},
 	start{ true }, m_TypesOfSpriteBlocks{ new SpritesBlocks },
-	m_TickCounter{}, Framework() {}
+	m_deltaTime{}, m_clock{ Clock::s_GetClock() }, Framework(){}
 
 Arkanoid::~Arkanoid()
 {
@@ -36,6 +37,7 @@ Arkanoid::~Arkanoid()
 	}
 	////////////////////
 	delete m_TypesOfSpriteBlocks;
+	Clock::destroyClock();
 }
 
 void Arkanoid::PreInit(int& width, int& height, bool& fullscreen)
@@ -50,6 +52,7 @@ void Arkanoid::PreInit(int& width, int& height, bool& fullscreen)
 }
 bool Arkanoid::Init()
 {
+	std::cout << getTickCount() << std::endl;
 	//Resizer::ResizerInit();
 	getScreenSize(WIDTH, HEIGHT);
 	//WIDTH = Resizer::getScreenWidth();
@@ -65,15 +68,15 @@ bool Arkanoid::Init()
 		std::cout << e.what << std::endl;
 		return false;
 	}
+	
 	std::cout << "Welcome in game: " << GetTitle() << " " << WIDTH << "x" << HEIGHT << "	After " <<getTickCount()<< " miliseconds everything is ready. Enjoy ;)" << std::endl;
-
 	return true;
 
 }
 
 void Arkanoid::prepareEnv()
 {
-	//std::cout << getTickCount() << std::endl;
+	std::cout << getTickCount() << std::endl;
 	m_Background = new BackGround(1, 1, 0.f, 0.f); //(WIDTH, HEIGHT, 0, 0, 0, 0);
 	m_Header = new Header(1, 800 / 64, 0.f, 0.f);//(WIDTH, 64, 0, 0, 0, 0);
 	//std::cout << getTickCount() << std::endl;
@@ -161,11 +164,13 @@ void Arkanoid::Close() {
 	}
 
 bool Arkanoid::Tick() {
+	m_clock->Update();
+	m_deltaTime = m_clock->getDeltaTime();
 
 	//m_TickCounter = getTickCount();
 	//if (KeyBoard::isAnyKeyPressed())
 
-
+	//player didn`t catch the ball
 	if (!m_Ball->m_animator->isInsideTheWindow(m_Ball))
 	{
 		m_Ball->OnOutsideTheWidow();
@@ -182,7 +187,7 @@ bool Arkanoid::Tick() {
 
 	if (int points = m_detector->UpdateBlocks(m_Ball); points)
 	{
-		s_points += m_comboHits > 3 ? points * 3 : points;		//TRZEBA POPRAWIC, ciagle nalicza pkt. mozliwe, ze pominalem warunki przed if else
+		s_points += m_comboHits > 3 ? points * 3 : points;
 	}
 	
 	if (m_detector->WasCollisionWIthPlatformDetected(m_Ball, m_Platform))
@@ -190,19 +195,20 @@ bool Arkanoid::Tick() {
 		m_comboHits = 0;
 	}
 
-	//static float initial_speed = 1000* m_Platform->getVelocity();
-	//if (float curr_speed = 1000 * m_Platform->getVelocity(); initial_speed != curr_speed) {}
-		//std::cout << m_Platform->getVelocity() << std::endl;
-	//std::cout << m_Platform-> getMiddle() << std::endl;
-
-	m_TickCounter = getTickCount();
-	m_Ball->m_animator->moveBall(m_Ball, m_TickCounter);
-	manageKeyboard();
 	drawVisibles();
+
 	if (isEndOfGame() && !s_EndOfGame)
 	{
 		std::cout << "Congratulations! Your score is: " << s_points << std::endl; //////////////////////
 	}
+	//static float initial_speed = 1000* m_Platform->getVelocity();
+	//if (float curr_speed = 1000 * m_Platform->getVelocity(); initial_speed != curr_speed) {}
+		//std::cout << m_Platform->getVelocity() << std::endl;
+	//std::cout << m_Platform-> getMiddle() << std::endl;
+	
+	//update positions
+	manageKeyboard();
+	m_Ball->m_animator->moveBall(m_Ball, m_deltaTime);
 
 	return false;
 
@@ -223,20 +229,24 @@ void Arkanoid::manageKeyboard()
 	if (KeyBoard::s_Enabled)
 	{
 		if (KeyBoard::isKeyPressed(FRKey::RIGHT))
-			m_Platform->m_animator->moveRight(m_Platform->m_x, m_Platform, m_TickCounter);
+			m_Platform->m_animator->moveRight(m_Platform->m_x, m_Platform, m_deltaTime);
 
 		if (KeyBoard::isKeyPressed(FRKey::LEFT))
-			m_Platform->m_animator->moveLeft(m_Platform->m_x, m_Platform, m_TickCounter);
+			m_Platform->m_animator->moveLeft(m_Platform->m_x, m_Platform, m_deltaTime);
 	}
 
 
 }
 
 void Arkanoid::onMouseMove(int x, int y, int xrelative, int yrelative) {
-	Mouse::x = x;
-	Mouse::y = y;
-	Mouse::xrelative = xrelative;
-	Mouse::yrelative = yrelative;
+	if (Mouse::s_Enabled)
+	{
+		Mouse::x = x;
+		Mouse::y = y;
+		Mouse::xrelative = xrelative;
+		Mouse::yrelative = yrelative;
+	}
+
 	//std::cout << "xrelative, yrelative:  " << xrelative << ' ' << yrelative << std::endl;
 	//std::cout << "x, y:  " << x<< ' ' << y<< std::endl;
 }				
@@ -273,15 +283,13 @@ void Arkanoid::onMouseButtonClick(FRMouseButton button, bool isReleased) {
 
 		case FRMouseButton::RIGHT:
 			//losuj umiejetnosc
-			if (s_points >= 20)	// i ilosc pkt  > 20
+			if (s_points >= 20 && Life::canBuy())	// i ilosc pkt  > 20
 			{
 				//draw  add life  or damage life
-				auto surprise = Shop::buyAbility();
-				s_points -= 20;
+				auto surprise = Shop::buyAbility(s_points);
 				switch (surprise)	//more elastic
 				{
 				case Shop::Ability::Positive:
-					if(Life::canBuy())
 						Life::addLife();
 					break;
 				case Shop::Ability::Negative:

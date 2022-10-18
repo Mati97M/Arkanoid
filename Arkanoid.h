@@ -5,6 +5,8 @@
 #include "Visible/Block/Block.h"
 #include "Visible/Platform.h"
 #include "Visible/Ball.h"
+#include "CollisionDetector/CollisionDetector.h"
+#include <memory>
 
 class Arkanoid : public Framework {
 
@@ -17,11 +19,13 @@ class Arkanoid : public Framework {
 	Header* m_Header{};
 	Platform* m_Platform{};
 	Ball* m_Ball{};
+	std::unique_ptr<CollisionDetector> m_detector{};
+	
 
 	Sprite* m_spBackground{};
 	Sprite* m_spHeader{};
 	Sprite* m_spLife{};
-	SpritesBlocks* m_TypesOfSpriteBlocks{};
+	SpritesBlocks* m_TypesOfSpriteBlocks;
 	Sprite* m_spPlatform{};
 	Sprite* m_spBall{};
 

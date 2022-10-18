@@ -18,8 +18,10 @@ class Block : public Visible
 	static void createBlocks(const int& screenWidth, const int& screenHeight, int startX, int startY);
 	static void drawBlocks( SpritesBlocks & blockSprites);
 	static void turnOnVisibility();
+public:
+	virtual void getCoordinates(int& x, int& y, int& w, int& h) const;
 
 	friend class Arkanoid;
-	friend class Resizer;
+	friend class CollisionDetector;
 
 };

@@ -31,6 +31,7 @@ public:
 	int getH() { return s_Height; }
 	int getMiddle() { return m_x + s_Width / 2; }
 	void getCoordinates(int& x, int& y, int& w, int& h) const;
+	float getRelY();
 	float getVelocity() { return m_animator->getVelocity(); }
 
 	friend Arkanoid;

@@ -2,7 +2,11 @@
 #include "User/KeyBoard.h"
 #include "User/Mouse.h"
 
-Arkanoid::Arkanoid(int width, int height, bool fullscreen) : WIDTH{ width }, HEIGHT{ height }, FULLSCREEN{ fullscreen }, m_spBackground{}, m_spHeader{}, m_spLife{}, start{ true }, m_TypesOfSpriteBlocks{ new SpritesBlocks }, m_TickCounter{}, Framework() {}
+Arkanoid::Arkanoid(int width, int height, bool fullscreen) : 
+	WIDTH{ width }, HEIGHT{ height }, FULLSCREEN{ fullscreen }, m_spBackground{},
+	m_spHeader{}, m_spLife{}, m_detector{std::make_unique<CollisionDetector>()},
+	start{ true }, m_TypesOfSpriteBlocks{ new SpritesBlocks },
+	m_TickCounter{}, Framework() {}
 
 Arkanoid::~Arkanoid()
 {
@@ -182,6 +186,9 @@ bool Arkanoid::Tick() {
 
 	}
 
+	m_detector->UpdateBlocks(m_Ball);
+	m_detector->WasCollisionWIthPlatformDetected(m_Ball, m_Platform);
+
 	//static float initial_speed = 1000* m_Platform->getVelocity();
 	//if (float curr_speed = 1000 * m_Platform->getVelocity(); initial_speed != curr_speed) {}
 		//std::cout << m_Platform->getVelocity() << std::endl;
@@ -226,7 +233,7 @@ void Arkanoid::onMouseMove(int x, int y, int xrelative, int yrelative) {
 	Mouse::xrelative = xrelative;
 	Mouse::yrelative = yrelative;
 	//std::cout << "xrelative, yrelative:  " << xrelative << ' ' << yrelative << std::endl;
-	std::cout << "x, y:  " << x<< ' ' << y<< std::endl;
+	//std::cout << "x, y:  " << x<< ' ' << y<< std::endl;
 }				
 
 void Arkanoid::onMouseButtonClick(FRMouseButton button, bool isReleased) {

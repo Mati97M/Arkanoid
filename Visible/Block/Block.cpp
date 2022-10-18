@@ -1,4 +1,5 @@
 #include "Block.h"
+#include "../Visible.h"
 
 
 BlocksList Block::s_BlocksList{};
@@ -99,6 +100,14 @@ void Block::turnOnVisibility()
 		block->m_visible = true;
 	}
 }
+
+void Block::getCoordinates(int& x, int& y, int& w, int& h) const
+{
+	x = static_cast<int>(m_x);
+	y = static_cast<int>(m_y);
+	w = Block::s_Width;
+	h = Block::s_Height;
+};
 
 //void Block::setBlocksSpriteSize(SpritesBlocks& blockSprites)
 //{

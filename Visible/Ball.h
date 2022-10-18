@@ -28,6 +28,7 @@ public:
 	int getW() { return s_Width; }
 	int getH() { return s_Height; }
 
-	friend Arkanoid;
-	friend Animation;
+	friend class Arkanoid;
+	friend class Animation;
+	friend class CollisionDetector;
 };

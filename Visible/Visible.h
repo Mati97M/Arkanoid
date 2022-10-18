@@ -50,6 +50,6 @@ public:
 	virtual int getH() { return s_Height; }
 
 	friend class Arkanoid;
-	//friend class Resizer;
+	friend class CollisionDetector;
 };
 

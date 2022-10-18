@@ -30,3 +30,8 @@ void Platform::getCoordinates(int& x, int& y, int& w, int& h) const
 	w = Platform::s_Width;
 	h = Platform::s_Height;
 };
+
+float Platform::getRelY()
+{
+	return m_relativeY;
+}

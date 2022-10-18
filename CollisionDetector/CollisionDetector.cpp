@@ -37,12 +37,18 @@ int CollisionDetector::UpdateBlocks(Ball* ball)
 			if (WasCollisionWithBlockDetected(ball, block))
 			{
 				block->m_visible = false;
-					return 5;
+				m_destroyedBlocks++;
+				return 5;
 			}
 		}
 	}
 	return 0;
 }
+bool CollisionDetector::allBlocksDestroyed()
+{
+	return m_destroyedBlocks == Block::getBlocksCount();
+}
+
 
 bool CollisionDetector::WasCollisionWIthPlatformDetected(Ball* ball, Platform* platform)
 {

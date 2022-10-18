@@ -22,9 +22,7 @@ Life::Life(int widthDivider, int heightDivider, float a_relativeX, float a_relat
 	{
 		Life::s_Height = scrHeight / heightDivider;
 	}
-	//loadTextures(this, s_SpritePath);
-	//s_Visibles.push_back(this);
-	//setSpriteSize(s_Sprite, m_Width, m_Height);
+
 }
 
 std::size_t Life::damageLife() {

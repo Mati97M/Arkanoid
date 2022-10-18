@@ -26,10 +26,8 @@ class Life : public Visible
 	static std::size_t addLife();
 	static bool canBuy()
 	{
-		return (Life::s_lifeList.size() < s_Limit);
-			
+		return (s_lifeList.size() < s_Limit);	
 	}
-
 	friend Arkanoid;
 	//friend Resizer;
 };

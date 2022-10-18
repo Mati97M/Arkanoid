@@ -48,9 +48,9 @@ void Animation::moveBall(Ball* ball, float dt)
 {
 	if (ball->launched)
 	{
-		auto pixelsX = ball->dx * speed * dt;
+		auto pixelsX = speed/ ball->dx * dt;
 		ball->m_x -= pixelsX;
-		auto pixelsY = ball->dy * speed * dt;
+		auto pixelsY = speed/ ball->dy * dt;
 		ball->m_y -= pixelsY;
 
 
@@ -69,6 +69,8 @@ void Animation::moveBall(Ball* ball, float dt)
 			ball->m_y = Header::getH();
 			ball->dy = -(ball->dy);
 		}   		
+		//if (ball->m_x < 0 || ball->m_x + ball->s_Width > scrWidth)  ball->dx = -(ball->dx);
+		//if (ball->m_y < Header::getH())   ball->dy = -(ball->dy);		//|| ball->m_y  + ball->s_Height > scrHeight)
 
 	}
 
@@ -77,15 +79,15 @@ void Animation::moveBall(Ball* ball, float dt)
 
 void Animation::moveUp(float& y, unsigned int dt, Visible* visible)		////////////////  zmienic na ksztalt tamtych  KOLEJNOSC
 {
-	if (isInsideTheWindow(visible))
-	{
-		y += dt * speed;
-	}
-	//else		//////////////////   zrobic osobno, zeby ruch w pionie byl tylko dla kulki
-	//	y
+	//if (isInsideTheWindow(visible))
+	//{
+	//	y += dt * speed;
+	//}
+	////else		//////////////////   zrobic osobno, zeby ruch w pionie byl tylko dla kulki
+	////	y
 
 }
 void Animation::moveDown(float& x, unsigned int dt, Visible* visible)
 {
-	x -= dt * speed;
+	//x -= dt * speed;
 }

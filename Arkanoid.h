@@ -19,7 +19,7 @@ class Shop
 	};
 public:
 	Ability static buyAbility(int& points) {
-		points = -20;
+		points -= 20;
 		if (rand() % 2 == 0)
 			return Ability::Negative;
 		else
@@ -34,7 +34,7 @@ class Arkanoid : public Framework {
 	int WIDTH{};
 	int HEIGHT{};
 	bool FULLSCREEN{};
-	bool start{true};
+	/*bool start{true};*/
 	//Resizer* m_Resizer{};
 	BackGround* m_Background{};
 	Header* m_Header{};
@@ -50,6 +50,7 @@ class Arkanoid : public Framework {
 	Sprite* m_spPlatform{};
 	Sprite* m_spBall{};
 
+	bool suppressMsg{};
 	float m_deltaTime{};
 	//restart
 	static int s_points;
@@ -80,10 +81,16 @@ public:
 	virtual const char* GetTitle() override;
 
 	void giveLifes();
+	bool win() {
+		return m_detector->allBlocksDestroyed() && m_detector->WasCollisionWIthPlatformDetected(m_Ball,m_Platform);
+	}
+	bool loss() {
+		return 	Life::s_lifeList.empty() || !m_Ball->m_animator->isInsideTheWindow(m_Ball);
+	}
 
 public:
-	bool static isEndOfGame() {
-		return s_EndOfGame = Life::s_lifeList.empty();
+	bool static isEndOfGame(Arkanoid* arkanoid) {
+		return arkanoid->win() || arkanoid->loss();
 	}
 
 	int getHeadersBottomLX() { return m_Header->m_x; }
@@ -93,6 +100,9 @@ private:
 
 	void drawVisibles();
 	void manageKeyboard();
+	void damageLife();
+	void restart();
+
 	//void manageMouse();
 
 	void prepareEnv();

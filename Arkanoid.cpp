@@ -9,8 +9,8 @@ unsigned long Arkanoid::timeInSecs{};
 Arkanoid::Arkanoid(int width, int height, bool fullscreen) : 
 	WIDTH{ width }, HEIGHT{ height }, FULLSCREEN{ fullscreen }, m_spBackground{},
 	m_spHeader{}, m_spLife{}, m_detector{std::make_unique<CollisionDetector>()},
-	start{ true }, m_TypesOfSpriteBlocks{ new SpritesBlocks },
-	m_deltaTime{}, m_clock{ Clock::s_GetClock() }, Framework(){}
+	/*start{ true },*/ m_TypesOfSpriteBlocks{ new SpritesBlocks },
+	m_deltaTime{}, suppressMsg{ false }, m_clock{ Clock::s_GetClock() }, Framework(){}
 
 Arkanoid::~Arkanoid()
 {
@@ -81,7 +81,7 @@ void Arkanoid::prepareEnv()
 	m_Header = new Header(1, 800 / 64, 0.f, 0.f);//(WIDTH, 64, 0, 0, 0, 0);
 	//std::cout << getTickCount() << std::endl;
 	/////  lifes
-	Life::s_LifeCounter = 3;
+	Life::s_LifeCounter = 1;
 	giveLifes();
 	///// blocks
 	//std::cout << getTickCount() << std::endl;
@@ -164,75 +164,68 @@ void Arkanoid::Close() {
 	}
 
 bool Arkanoid::Tick() {
-	m_clock->Update();
-	m_deltaTime = m_clock->getDeltaTime();
-
-	//m_TickCounter = getTickCount();
-	//if (KeyBoard::isAnyKeyPressed())
-
-	//player didn`t catch the ball
-	if (!m_Ball->m_animator->isInsideTheWindow(m_Ball))
+	if (!Life::s_lifeList.empty())
 	{
-		m_Ball->OnOutsideTheWidow();
-		m_Platform->OnOutsideTheWidow();
-		KeyBoard::s_Enabled = false;
-		Mouse::s_Enabled = true;
-		showCursor(true);
-		//start = false;
-		size_t lifesNum =  Life::damageLife();
-		//if (lifesNum == 0)
-		//	start = false;
+		m_clock->Update();
+		m_deltaTime = m_clock->getDeltaTime();
 
-	}
+		//player didn`t catch the ball
+		if (!m_Ball->m_animator->isInsideTheWindow(m_Ball) && m_Ball->launched)
+		{
+			damageLife();
 
-	if (int points = m_detector->UpdateBlocks(m_Ball); points)
-	{
-		if (m_comboHits > 3)
-		{
-			s_points += points * 3;
-			std::cout << "Combo hit!  + 15: " << s_points << std::endl;
 		}
-		else
+
+		if (int points = m_detector->UpdateBlocks(m_Ball); points)
 		{
-			s_points += points;
+			if (m_comboHits > 3)
+			{
+				s_points += points * 3;
+				std::cout << "Combo hit!  + 15: " << s_points << std::endl;
+			}
+			else
+			{
+				s_points += points;
+			}
+			std::cout << "Current score: " << s_points << std::endl;
 		}
-		//s_points += m_comboHits > 3 ? points * 3 : points;
-		std::cout << "Current score: " << s_points << std::endl;
+
+		if (m_detector->WasCollisionWIthPlatformDetected(m_Ball, m_Platform))
+		{
+			m_comboHits = 0;
+		}
+
+		drawVisibles();
+
+		if (isEndOfGame(this) && !suppressMsg)
+		{
+			if (win())
+				std::cout << "Win!  :D\n";
+			if (loss())
+				std::cout << "Loss!  :(\n";
+			std::cout << "Congratulations! Your score is: " << s_points << std::endl;
+			std::cout << "Press Right Mouse button to restart" << std::endl;
+			suppressMsg = !suppressMsg;
+		}
+
+		//update positions
+		manageKeyboard();
+		m_Ball->m_animator->moveBall(m_Ball, m_deltaTime);
+
+
 	}
 	
-	if (m_detector->WasCollisionWIthPlatformDetected(m_Ball, m_Platform))
-	{
-		m_comboHits = 0;
-	}
-
-	drawVisibles();
-
-	if (isEndOfGame() && !s_EndOfGame)
-	{
-		std::cout << "Congratulations! Your score is: " << s_points << std::endl; //////////////////////
-	}
-	//static float initial_speed = 1000* m_Platform->getVelocity();
-	//if (float curr_speed = 1000 * m_Platform->getVelocity(); initial_speed != curr_speed) {}
-		//std::cout << m_Platform->getVelocity() << std::endl;
-	//std::cout << m_Platform-> getMiddle() << std::endl;
-	
-	//update positions
-	manageKeyboard();
-	m_Ball->m_animator->moveBall(m_Ball, m_deltaTime);
-
 	return false;
-
-	//jesli np chcemy.....  no wlasnie, co?
 	//return true; //exits the aplication	
 }
 
-//void Arkanoid::manageMouse()
-//{
-//	if (Mouse::s_Enabled)
-//	{
-//
-//	}
-//}
+void Arkanoid::damageLife() {
+	m_Ball->OnOutsideTheWidow();
+	m_Platform->OnOutsideTheWidow();
+	KeyBoard::s_Enabled = false;
+	showCursor(true);
+	Life::damageLife();
+}
 
 void Arkanoid::manageKeyboard()
 {
@@ -249,20 +242,17 @@ void Arkanoid::manageKeyboard()
 }
 
 void Arkanoid::onMouseMove(int x, int y, int xrelative, int yrelative) {
-	if (Mouse::s_Enabled)
-	{
 		Mouse::x = x;
 		Mouse::y = y;
 		Mouse::xrelative = xrelative;
 		Mouse::yrelative = yrelative;
-	}
 
 	//std::cout << "xrelative, yrelative:  " << xrelative << ' ' << yrelative << std::endl;
 	//std::cout << "x, y:  " << x<< ' ' << y<< std::endl;
 }				
 
 void Arkanoid::onMouseButtonClick(FRMouseButton button, bool isReleased) {
-	if (Mouse::s_Enabled)
+	if (isReleased)
 	{
 		switch (button)
 		{
@@ -270,83 +260,100 @@ void Arkanoid::onMouseButtonClick(FRMouseButton button, bool isReleased) {
 
 			//wystrzel kulke jesli kulka jest poza ekranem i masz zycia		lub
 			//zagraj jeszcze raz
-			if (m_Ball->m_animator->isInsideTheWindow(m_Ball) || !m_Ball->launched)
+			if (m_Ball->m_animator->isInsideTheWindow(m_Ball) && !m_Ball->launched)
 			{
 				if (!Life::s_lifeList.empty())
 				{
 					m_Ball->launch(Mouse::x, Mouse::y);
 					KeyBoard::s_Enabled = true;
-					Mouse::s_Enabled = false;
 					showCursor(false);
-					start = false;
+
 					
 				}
-				else//////////////???????????????????
+				else if (isEndOfGame(this))		//not launched, in window, lack of lifes
 				{
+					std::cout << "GAME OVER" << std::endl;
 					showCursor(true);
-					Mouse::s_Enabled = true;
-					
+					return;
 				}
-				//Mouse::s_Enabled = false;
 			}
 			break;
 
 		case FRMouseButton::RIGHT:
+			
 			//losuj umiejetnosc
-			if (s_points >= 20 && Life::canBuy())	// i ilosc pkt  > 20
+			if ( Life::canBuy())
 			{
-				//draw  add life  or damage life
-				auto surprise = Shop::buyAbility(s_points);
-				switch (surprise)	//more elastic
+				if (s_points >= 20)
 				{
-				case Shop::Ability::Positive:
+					size_t lifesNum{};
+					std::cout << "Ability bought. Score -20 points";
+					//draw  add life  or damage life
+					auto surprise = Shop::buyAbility(s_points);
+					switch (surprise)
+					{
+					case Shop::Ability::Positive:
 						Life::addLife();
-					break;
-				case Shop::Ability::Negative:
-					Life::damageLife();
-					break;
-				default:
-					break;
+						std::cout << "Positive: Life added.\n";
+						break;
+					case Shop::Ability::Negative:
+						lifesNum = Life::damageLife();
+						if (!lifesNum)
+							restart();
+						std::cout << "Negative: Life taken.\n";
+						break;
+
+					default:
+						break;
+					}
 				}
+				else
+				{
+					std::cout << "Sorry, too few points to buy ability" << std::endl;
+
+				}
+
+
 			}
-			//restart
-			else if (m_Ball->m_animator->isInsideTheWindow(m_Ball) && isEndOfGame())		//m_Ball->m_animator->isInsideTheWindow(m_Ball)  war zbedny
-			{
-				Life::s_LifeCounter = 3;
-				giveLifes();
-				Block::turnOnVisibility();
-				s_EndOfGame = false;
-			}
-			
-			//if (m_Ball->m_animator->isInsideTheWindow(m_Ball) || start)
+			//else 
 			//{
-			//	Life::s_LifeCounter = 3;
-			//	giveLifes();
-			//	Block::turnOnVisibility();
+
 			//}
-			
+			//restart
+			if ( isEndOfGame(this))
+			{
+				restart();
+
+			}
 			break;
 		default:
 			break;
 		}
 	}
 
-	}
+}
+void Arkanoid::restart() {
+	Life::s_LifeCounter = 1;
+	giveLifes();
+	Block::turnOnVisibility();
+	m_detector->ResetDetector();
+	m_comboHits = 0;
+	m_Ball->launched = false;
+	KeyBoard::s_Enabled = true;
+	suppressMsg = false;
+	auto ballPos = m_Ball->initialPosition;
+	m_Ball->m_x = ballPos.first;
+	m_Ball->m_y = ballPos.second;
+	s_points = 0;
+	m_comboHits = 0;
+	showCursor(true);
+}
+
 
 void Arkanoid::onKeyPressed(FRKey k)
 {
 	KeyBoard::s_keyboardState[k] = true;
-	//switch (k)
-	//{
-	//case FRKey::RIGHT:
-	//	m_Platform->m_animator->moveRight(m_Platform->m_x,getTickCount());
-	//	break;
-	//case FRKey::LEFT:
-	//	m_Platform->m_animator->moveLeft(m_Platform->m_x, getTickCount());
-	//	break;
-	//default:
-	//	break;
-	//}
+
 }
 
 void Arkanoid::onKeyReleased(FRKey k) {

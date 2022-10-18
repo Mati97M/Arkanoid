@@ -20,6 +20,7 @@ class Block : public Visible
 	static void turnOnVisibility();
 public:
 	virtual void getCoordinates(int& x, int& y, int& w, int& h) const;
+	static size_t getBlocksCount() { return s_BlocksList.size(); }
 
 	friend class Arkanoid;
 	friend class CollisionDetector;

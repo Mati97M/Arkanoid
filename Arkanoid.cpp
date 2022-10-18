@@ -187,7 +187,17 @@ bool Arkanoid::Tick() {
 
 	if (int points = m_detector->UpdateBlocks(m_Ball); points)
 	{
-		s_points += m_comboHits > 3 ? points * 3 : points;
+		if (m_comboHits > 3)
+		{
+			s_points += points * 3;
+			std::cout << "Combo hit!  + 15: " << s_points << std::endl;
+		}
+		else
+		{
+			s_points += points;
+		}
+		//s_points += m_comboHits > 3 ? points * 3 : points;
+		std::cout << "Current score: " << s_points << std::endl;
 	}
 	
 	if (m_detector->WasCollisionWIthPlatformDetected(m_Ball, m_Platform))

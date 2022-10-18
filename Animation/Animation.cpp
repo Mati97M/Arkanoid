@@ -8,7 +8,7 @@ int Animation::scrWidth{};
 int Animation::scrHeight{};
 
 Animation::Animation(float a_speed) : speed{ a_speed } {
-	if (!scrWidth || scrHeight)
+	if (!scrWidth || !scrHeight)
 		getScreenSize(scrWidth, scrHeight);
 }
 
@@ -27,25 +27,24 @@ bool Animation::isInsideTheWindow(const Visible* visible)
 		return true;
 }
 
-void Animation::moveRight(float& x, Visible* visible, unsigned dt)
+void Animation::moveRight(float& x, Visible* visible, float dt)
 {
-	x += visible->getW() / 2 * dt; //* speed;
+	x += speed * dt; 
 	if (!isInsideTheWindow(visible))
 	{
 		x = scrWidth - visible->getW();
 	}
 }
-void Animation::moveLeft(float& x, Visible* visible, unsigned dt)
+void Animation::moveLeft(float& x, Visible* visible, float dt)
 {
-	x -= visible->getW() / 2 * dt; //* speed;
-	//x -= dt * speed;
+	x -= speed * dt;
 	if (!isInsideTheWindow(visible))
 	{
 		x = 0;
 	}
 }
 
-void Animation::moveBall(Ball* ball, unsigned dt)
+void Animation::moveBall(Ball* ball, float dt)
 {
 	if (ball->launched)
 	{
@@ -54,14 +53,22 @@ void Animation::moveBall(Ball* ball, unsigned dt)
 		auto pixelsY = ball->dy * speed * dt;
 		ball->m_y -= pixelsY;
 
-		//auto pixelsX = ball->dx / (dt / speed);
-		//ball->m_x -= pixelsX;
-		//auto pixelsY = ball->dy / (dt/speed);
-		//ball->m_y -= pixelsY;
 
-
-		if (ball->m_x < 0 || ball->m_x + ball->s_Width > scrWidth)  ball->dx = -(ball->dx);
-		if (ball->m_y < Header::getH())   ball->dy = -(ball->dy);		//|| ball->m_y  + ball->s_Height > scrHeight)
+		if (ball->m_x < 0)
+		{
+			ball->m_x = 0;
+			ball->dx = -(ball->dx);
+		}
+		if (ball->m_x + ball->s_Width > scrWidth)
+		{
+			ball->m_x = scrWidth - ball->s_Width;
+			ball->dx = -(ball->dx);
+		}
+		if (ball->m_y < Header::getH()) 
+		{
+			ball->m_y = Header::getH();
+			ball->dy = -(ball->dy);
+		}   		
 
 	}
 

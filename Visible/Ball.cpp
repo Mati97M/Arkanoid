@@ -23,13 +23,15 @@ Ball::Ball(int widthDivider, int heightDivider, float a_relativeX, float a_relat
 	m_y = m_platform->getY() - s_Height - 3;
 	initialPosition = std::make_pair( m_x, m_y );
 
-	m_animator = std::make_unique<Animation>(1.5f);
+	m_animator = std::make_unique<Animation>(40*s_Height);
 }
 
 void Ball::launch(int mouse_x, int mouse_y)
 {
-	dx = static_cast<float>(m_x - mouse_x);
-	dy = static_cast<float>(m_y - mouse_y);
+	int W, H;
+	getScreenSize(W, H);
+	dx = static_cast<float>(m_x - mouse_x)/W;
+	dy = static_cast<float>(m_y - mouse_y)/H;
 	launched = true;
 }
 

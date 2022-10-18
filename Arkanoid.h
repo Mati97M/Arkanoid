@@ -8,6 +8,24 @@
 #include "CollisionDetector/CollisionDetector.h"
 #include <memory>
 
+class Shop
+{
+	enum class Ability
+	{
+		Positive,
+		Negative
+	};
+public:
+	Ability static buyAbility() {
+		if (rand() % 2 == 0)
+			return Ability::Negative;
+		else
+			return Ability::Positive;
+	}
+	friend class Arkanoid;
+};
+
+
 class Arkanoid : public Framework {
 
 	int WIDTH{};
@@ -30,6 +48,9 @@ class Arkanoid : public Framework {
 	Sprite* m_spBall{};
 
 	unsigned m_TickCounter{};
+	//restart
+	static int s_points;
+	int m_comboHits{};
 
 public:
 	Arkanoid(int width, int height, bool fullscreen);

@@ -2,6 +2,8 @@
 #include "User/KeyBoard.h"
 #include "User/Mouse.h"
 
+int Arkanoid::s_points;
+
 Arkanoid::Arkanoid(int width, int height, bool fullscreen) : 
 	WIDTH{ width }, HEIGHT{ height }, FULLSCREEN{ fullscreen }, m_spBackground{},
 	m_spHeader{}, m_spLife{}, m_detector{std::make_unique<CollisionDetector>()},
@@ -110,6 +112,7 @@ void Arkanoid::InitSprites()
 	(*m_TypesOfSpriteBlocks)['O'] = InitSprite(m_spLife, "data/O.png");
 	(*m_TypesOfSpriteBlocks)['Y'] = InitSprite(m_spLife, "data/Y.png");
 	(*m_TypesOfSpriteBlocks)['P'] = InitSprite(m_spLife, "data/P.png");
+	(*m_TypesOfSpriteBlocks)['#'] = InitSprite(m_spLife, "data/#.png");
 
 	if (!Block::s_BlocksList.empty())
 	{
@@ -157,7 +160,7 @@ bool Arkanoid::isEndOfGame()
 	bool EndOfGame = Life::s_lifeList.empty();
 	if (EndOfGame)
 	{
-		std::cout << "Congratulations! Your score is: " << std::endl; //////////////////////
+		std::cout << "Congratulations! Your score is: "<< s_points << std::endl; //////////////////////
 	}
 	return EndOfGame;
 }
@@ -186,8 +189,15 @@ bool Arkanoid::Tick() {
 
 	}
 
-	m_detector->UpdateBlocks(m_Ball);
-	m_detector->WasCollisionWIthPlatformDetected(m_Ball, m_Platform);
+	if (int points = m_detector->UpdateBlocks(m_Ball); points)
+	{
+		s_points += m_comboHits > 3 ? points * 3 : points;		//TRZEBA POPRAWIC, ciagle nalicza pkt. mozliwe, ze pominalem warunki przed if else
+	}
+	
+	if (m_detector->WasCollisionWIthPlatformDetected(m_Ball, m_Platform))
+	{
+		m_comboHits = 0;
+	}
 
 	//static float initial_speed = 1000* m_Platform->getVelocity();
 	//if (float curr_speed = 1000 * m_Platform->getVelocity(); initial_speed != curr_speed) {}
@@ -268,9 +278,22 @@ void Arkanoid::onMouseButtonClick(FRMouseButton button, bool isReleased) {
 
 		case FRMouseButton::RIGHT:
 			//losuj umiejetnosc
-			if (m_Ball->launched)	// i ilosc pkt  > 20
+			if (m_Ball->launched && s_points >= 20)	// i ilosc pkt  > 20
 			{
 				//losuj  add life  albo damage life
+				auto surprise = Shop::buyAbility();
+				s_points -= 20;
+				switch (surprise)	//more elastic
+				{
+				case Shop::Ability::Positive:
+					Life::addLife();
+					break;
+				case Shop::Ability::Negative:
+					Life::damageLife();
+					break;
+				default:
+					break;
+				}
 			}
 			//restart
 			else if (m_Ball->m_animator->isInsideTheWindow(m_Ball) && isEndOfGame())		//m_Ball->m_animator->isInsideTheWindow(m_Ball)  war zbedny

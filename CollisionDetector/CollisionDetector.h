@@ -10,7 +10,7 @@ class CollisionDetector
 {
 private:
 	bool WasCollisionWithBlockDetected(Ball* ball, Block* visible);
-	void UpdateBlocks(Ball* ball);
+	int UpdateBlocks(Ball* ball);
 	bool WasCollisionWIthPlatformDetected(Ball* ball, Platform* platform);
 
 	friend class Arkanoid;

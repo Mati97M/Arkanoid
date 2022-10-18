@@ -28,15 +28,20 @@ bool CollisionDetector::WasCollisionWithBlockDetected(Ball* ball, Block* visible
 
 }
 
-void CollisionDetector::UpdateBlocks(Ball* ball)
+int CollisionDetector::UpdateBlocks(Ball* ball)
 {
 	for (auto& block : Block::s_BlocksList)
 	{
 		if (block->m_visible)
 		{
-			block->m_visible = !WasCollisionWithBlockDetected(ball, block);
+			if (WasCollisionWithBlockDetected(ball, block))
+			{
+				block->m_visible = false;
+					return 5;
+			}
 		}
 	}
+	return 0;
 }
 
 bool CollisionDetector::WasCollisionWIthPlatformDetected(Ball* ball, Platform* platform)

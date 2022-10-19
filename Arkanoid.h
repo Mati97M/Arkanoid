@@ -51,6 +51,7 @@ class Arkanoid : public Framework {
 	Sprite* m_spBall{};
 
 	bool suppressMsg{};
+	bool suppressMsg2{};
 	float m_deltaTime{};
 	//restart
 	static int s_points;

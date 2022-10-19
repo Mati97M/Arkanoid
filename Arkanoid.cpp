@@ -197,15 +197,19 @@ bool Arkanoid::Tick() {
 
 		drawVisibles();
 
-		if (isEndOfGame(this) && !suppressMsg)
+		if (isEndOfGame(this))
 		{
-			if (win())
-				std::cout << "Win!  :D\n";
-			if (loss())
-				std::cout << "Loss!  :(\n";
-			std::cout << "Congratulations! Your score is: " << s_points << std::endl;
-			std::cout << "Press Right Mouse button to restart" << std::endl;
-			suppressMsg = !suppressMsg;
+			if (!suppressMsg2)
+			{
+				if (win())
+					std::cout << "Win!  :D\n";
+				if (loss())
+					std::cout << "Loss!  :(\n";
+				std::cout << "Congratulations! Your score is: " << s_points << std::endl;
+				std::cout << "Press Right Mouse button to restart" << std::endl;
+				suppressMsg2 = !suppressMsg2;
+			}
+			restart();
 		}
 
 		//update positions
@@ -346,6 +350,7 @@ void Arkanoid::restart() {
 	m_Ball->m_y = ballPos.second;
 	s_points = 0;
 	m_comboHits = 0;
+	suppressMsg2 = false;
 	showCursor(true);
 }
 

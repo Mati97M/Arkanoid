@@ -178,6 +178,7 @@ bool Arkanoid::Tick() {
 
 		if (int points = m_detector->UpdateBlocks(m_Ball, m_clock); points)
 		{
+			m_comboHits++;
 			if (m_comboHits > 3)
 			{
 				s_points += points * 3;
@@ -304,6 +305,7 @@ void Arkanoid::onMouseButtonClick(FRMouseButton button, bool isReleased) {
 						lifesNum = Life::damageLife();
 						if (!lifesNum)
 							restart();
+						std::cout << "Congratulations! Your score is: " << s_points << std::endl;
 						std::cout << "Negative: Life taken.\n";
 						break;
 
@@ -349,7 +351,6 @@ void Arkanoid::restart() {
 	m_Ball->m_x = ballPos.first;
 	m_Ball->m_y = ballPos.second;
 	s_points = 0;
-	m_comboHits = 0;
 	suppressMsg2 = false;
 	showCursor(true);
 	m_clock->resetImmuneFlag();

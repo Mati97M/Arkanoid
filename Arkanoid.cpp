@@ -176,7 +176,7 @@ bool Arkanoid::Tick() {
 
 		}
 
-		if (int points = m_detector->UpdateBlocks(m_Ball); points)
+		if (int points = m_detector->UpdateBlocks(m_Ball, m_clock); points)
 		{
 			if (m_comboHits > 3)
 			{
@@ -352,6 +352,7 @@ void Arkanoid::restart() {
 	m_comboHits = 0;
 	suppressMsg2 = false;
 	showCursor(true);
+	m_clock->resetImmuneFlag();
 }
 
 

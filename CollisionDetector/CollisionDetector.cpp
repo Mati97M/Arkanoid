@@ -4,6 +4,8 @@
 #include "../Visible/Ball.h"
 #include "../Visible/Platform.h"
 #include "../Visible/Block/Block.h"
+#include "../Clock/Clock.h"
+#include "../Framework.h"
 
 bool CollisionDetector::WasCollisionWithBlockDetected(Ball* ball, Block* visible)
 {	//wczesniej sprawdzamy, czy jest visible na true, tu juz dzialamy tylko na takich
@@ -28,12 +30,14 @@ bool CollisionDetector::WasCollisionWithBlockDetected(Ball* ball, Block* visible
 
 }
 
-int CollisionDetector::UpdateBlocks(Ball* ball)
+int CollisionDetector::UpdateBlocks(Ball* ball, Clock* clock)
 {
 	for (auto& block : Block::s_BlocksList)
 	{
-		if (block->m_visible)
+		if (block->m_visible )
 		{
+			if (block->m_Color == 'P' && clock->ImmuneTime())
+				continue;
 			if (WasCollisionWithBlockDetected(ball, block))
 			{
 				block->m_visible = false;
